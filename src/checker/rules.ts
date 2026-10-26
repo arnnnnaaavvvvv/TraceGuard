@@ -174,7 +174,7 @@ function mapValidationErrorToFinding(
 
   return createFinding({
     ruleId,
-    severity: 'critical',
+    severity: ruleId === RUNTIME_RULES.ENUM_MISMATCH ? 'major' : 'critical',
     compatibility: 'BREAKING',
     method: op.method,
     endpoint: op.pathTemplate,

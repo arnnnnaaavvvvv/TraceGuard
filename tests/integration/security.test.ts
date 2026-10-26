@@ -22,14 +22,27 @@ describe('Security & Hardening Test Suite', () => {
     expect(redacted['cookie']).toBe('[REDACTED]');
     expect(redacted['content-type']).toBe('application/json');
 
-    const textWithTokens = 'Calling http://localhost:8080/users?token=secret123&apiKey=key999 with Bearer eyJhbGciOiJ.mytoken';
+    const textWithTokens = 'Calling http://localhost:8080/users?token=secret123&apiKey=key999&access_token=tok1234&refresh_token=ref5678 with Bearer eyJhbGciOiJ.mytoken and Basic dXNlcjpwYXNz';
     const cleanText = redactText(textWithTokens);
     expect(cleanText).not.toContain('secret123');
     expect(cleanText).not.toContain('key999');
+    expect(cleanText).not.toContain('tok1234');
+    expect(cleanText).not.toContain('ref5678');
     expect(cleanText).not.toContain('mytoken');
+    expect(cleanText).not.toContain('dXNlcjpwYXNz');
     expect(cleanText).toContain('token=[REDACTED]');
     expect(cleanText).toContain('apiKey=[REDACTED]');
+    expect(cleanText).toContain('access_token=[REDACTED]');
+    expect(cleanText).toContain('refresh_token=[REDACTED]');
     expect(cleanText).toContain('Bearer [REDACTED]');
+    expect(cleanText).toContain('Basic [REDACTED]');
+
+    const jsonWithCredentials = '{"username": "admin", "password": "super-secret-password-123", "client_secret": "cs-456"}';
+    const cleanJson = redactText(jsonWithCredentials);
+    expect(cleanJson).not.toContain('super-secret-password-123');
+    expect(cleanJson).not.toContain('cs-456');
+    expect(cleanJson).toContain('"password": "[REDACTED]"');
+    expect(cleanJson).toContain('"client_secret": "[REDACTED]"');
   });
 
   it('refuses mutating HTTP methods (POST, PUT, DELETE, PATCH) when safeMethodsOnly is true', () => {

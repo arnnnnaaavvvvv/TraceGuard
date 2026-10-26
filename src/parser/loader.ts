@@ -38,7 +38,7 @@ export function loadSpec(specPath: string): LoadedSpec {
     if (resolvedPath.endsWith('.json')) {
       raw = JSON.parse(content);
     } else {
-      raw = YAML.parse(content);
+      raw = YAML.parse(content, { maxAliasCount: 100 });
     }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);

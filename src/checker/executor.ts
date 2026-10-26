@@ -46,6 +46,14 @@ export async function executeContractChecks(
   const workers = Array.from({ length: concurrency }, () => worker());
   await Promise.all(workers);
 
+  allFindings.sort((a, b) =>
+    a.endpoint.localeCompare(b.endpoint) ||
+    a.method.localeCompare(b.method) ||
+    a.location.localeCompare(b.location) ||
+    a.ruleId.localeCompare(b.ruleId) ||
+    a.id.localeCompare(b.id)
+  );
+
   const summary = computeSummary(operations.length, checkedCount, skippedCount, allFindings);
 
   return {

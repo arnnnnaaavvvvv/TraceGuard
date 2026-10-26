@@ -30,12 +30,24 @@ export function resolveLocalRef(
   return current;
 }
 
+const MAX_DEREF_DEPTH = 50;
+
 export function dereferenceSchema(
   root: Record<string, unknown>,
   schema: unknown,
   seen: Set<unknown> = new Set(),
-  path: string = '#'
+  path: string = '#',
+  depth: number = 0
 ): unknown {
+  if (depth > MAX_DEREF_DEPTH) {
+    throw new SpecError(
+      `Maximum reference recursion depth (${MAX_DEREF_DEPTH}) exceeded at '${path}'.`,
+      undefined,
+      path,
+      'Split deeply nested schemas or reduce recursive $ref chains.'
+    );
+  }
+
   if (typeof schema !== 'object' || schema === null) {
     return schema;
   }
@@ -46,18 +58,18 @@ export function dereferenceSchema(
   seen.add(schema);
 
   if (Array.isArray(schema)) {
-    return schema.map((item, index) => dereferenceSchema(root, item, seen, `${path}/${index}`));
+    return schema.map((item, index) => dereferenceSchema(root, item, seen, `${path}/${index}`, depth + 1));
   }
 
   const obj = schema as Record<string, unknown>;
   if (typeof obj['$ref'] === 'string') {
     const resolved = resolveLocalRef(root, obj['$ref'], `${path}/$ref`);
-    return dereferenceSchema(root, resolved, seen, obj['$ref']);
+    return dereferenceSchema(root, resolved, seen, obj['$ref'], depth + 1);
   }
 
   const result: Record<string, unknown> = {};
   for (const [key, val] of Object.entries(obj)) {
-    result[key] = dereferenceSchema(root, val, seen, `${path}/${key.replace(/~/g, '~0').replace(/\//g, '~1')}`);
+    result[key] = dereferenceSchema(root, val, seen, `${path}/${key.replace(/~/g, '~0').replace(/\//g, '~1')}`, depth + 1);
   }
   return result;
 }

@@ -36,6 +36,14 @@ export function compareOperations(
     allChanges.push(...compareResponseSchemas(baseOp, headOp));
   }
 
+  allChanges.sort((a, b) =>
+    (a.endpoint ?? '').localeCompare(b.endpoint ?? '') ||
+    (a.method ?? '').localeCompare(b.method ?? '') ||
+    a.location.localeCompare(b.location) ||
+    a.ruleId.localeCompare(b.ruleId) ||
+    a.description.localeCompare(b.description)
+  );
+
   const findings = allChanges.map(compatChangeToFinding);
   const summary = computeSummary(baseOps.length, headOps.length, allChanges, findings);
 

@@ -47,7 +47,7 @@ function walkSchemaTree(
     if (JSON.stringify(base) !== JSON.stringify(head)) {
       changes.push(
         createCompatChange({
-          ruleId: 'TG-COMPAT-POLYMORPHIC-CHANGED',
+          ruleId: COMPAT_RULES.POLYMORPHIC_CHANGED,
           compatibility: 'UNKNOWN',
           severity: 'major',
           method: op.method,

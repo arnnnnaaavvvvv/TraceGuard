@@ -41,7 +41,7 @@ export function validateSchema(
   data: unknown,
   version: '3.0' | '3.1'
 ): readonly ValidationErrorDetail[] {
-  const preparedSchema = version === '3.0' ? normalize30Nullable(schema) : schema;
+  const preparedSchema = version === '3.0' ? normalize30Schema(schema) : schema;
   const validator = version === '3.0' ? ajv30 : ajv31;
 
   try {
@@ -65,13 +65,18 @@ export function validateSchema(
   }
 }
 
-function normalize30Nullable(schema: Record<string, unknown>): Record<string, unknown> {
+function normalize30Schema(schema: Record<string, unknown>): Record<string, unknown> {
   const cloned = structuredClone(schema);
 
   function transform(node: unknown): void {
     if (typeof node !== 'object' || node === null) return;
+    if (Array.isArray(node)) {
+      for (const item of node) transform(item);
+      return;
+    }
     const obj = node as Record<string, unknown>;
 
+    // Handle OpenAPI 3.0 nullable -> union with null
     if (obj['nullable'] === true) {
       delete obj['nullable'];
       if (typeof obj['type'] === 'string') {
@@ -81,11 +86,28 @@ function normalize30Nullable(schema: Record<string, unknown>): Record<string, un
       }
     }
 
-    if (obj['properties'] && typeof obj['properties'] === 'object') {
-      for (const val of Object.values(obj['properties'])) transform(val);
+    // Handle OpenAPI 3.0 exclusiveMinimum (boolean in 3.0, number in JSON schema draft 7)
+    if (typeof obj['exclusiveMinimum'] === 'boolean') {
+      if (obj['exclusiveMinimum'] === true && typeof obj['minimum'] === 'number') {
+        obj['exclusiveMinimum'] = obj['minimum'];
+        delete obj['minimum'];
+      } else {
+        delete obj['exclusiveMinimum'];
+      }
     }
-    if (obj['items'] && typeof obj['items'] === 'object') {
-      transform(obj['items']);
+
+    // Handle OpenAPI 3.0 exclusiveMaximum (boolean in 3.0, number in JSON schema draft 7)
+    if (typeof obj['exclusiveMaximum'] === 'boolean') {
+      if (obj['exclusiveMaximum'] === true && typeof obj['maximum'] === 'number') {
+        obj['exclusiveMaximum'] = obj['maximum'];
+        delete obj['maximum'];
+      } else {
+        delete obj['exclusiveMaximum'];
+      }
+    }
+
+    for (const val of Object.values(obj)) {
+      transform(val);
     }
   }
 

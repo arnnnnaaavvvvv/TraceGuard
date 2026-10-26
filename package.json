@@ -42,7 +42,6 @@
   "author": "Arnav",
   "license": "MIT",
   "dependencies": {
-    "@scalar/openapi-parser": "^0.29.16",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "commander": "^13.1.0",
