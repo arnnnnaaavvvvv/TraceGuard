@@ -1,0 +1,52 @@
+name: API Contract Guard
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  check-api:
+    name: Validate API Contract & Detect Breaking Changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install TraceGuard
+        run: npm install -g traceguard
+
+      - name: Diff OpenAPI Contract against Main
+        id: diff
+        run: |
+          git show origin/main:openapi.yaml > openapi.base.yaml
+          traceguard diff openapi.base.yaml openapi.yaml --ci --format markdown --output diff-summary.md
+        continue-on-error: true
+
+      - name: Start API Service
+        run: |
+          npm start &
+          npx wait-on http://localhost:8080/health --timeout 15000
+
+      - name: Run Live Contract Check
+        id: check
+        run: |
+          traceguard check --spec openapi.yaml --base-url http://localhost:8080 --ci --format markdown --output check-summary.md
+
+      - name: Publish Results to Step Summary
+        if: always()
+        run: |
+          if [ -f diff-summary.md ]; then
+            cat diff-summary.md >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f check-summary.md ]; then
+            cat check-summary.md >> $GITHUB_STEP_SUMMARY
+          fi

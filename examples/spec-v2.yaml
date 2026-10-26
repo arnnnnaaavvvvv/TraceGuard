@@ -1,0 +1,32 @@
+openapi: 3.1.0
+info:
+  title: User Service (Breaking Contract v2)
+  version: 2.0.0
+paths:
+  /api/users/{id}:
+    get:
+      summary: Retrieve user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 101
+      responses:
+        '200':
+          description: User response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                  - name
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  email:
+                    type: string

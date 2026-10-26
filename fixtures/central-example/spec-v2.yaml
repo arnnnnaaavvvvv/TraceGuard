@@ -1,0 +1,33 @@
+openapi: 3.1.0
+info:
+  title: User Service
+  version: 2.0.0
+paths:
+  /api/users/{id}:
+    get:
+      summary: Retrieve user by ID
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 101
+      responses:
+        '200':
+          description: Successful user response
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                  - name
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  email:
+                    type: string

@@ -1,0 +1,63 @@
+import { UnresolvedRefError, SpecError } from '../types/errors.js';
+
+export function resolveLocalRef(
+  root: Record<string, unknown>,
+  ref: string,
+  location?: string
+): unknown {
+  if (!ref.startsWith('#/')) {
+    throw new SpecError(
+      `Unsupported external reference '${ref}'. TraceGuard only resolves local references (e.g., '#/components/...'). Remote and file URL references are disabled for offline determinism and security.`,
+      undefined,
+      location,
+      'Convert external references to inline local definitions in #/components/.'
+    );
+  }
+
+  const parts = ref
+    .slice(2)
+    .split('/')
+    .map((part) => part.replace(/~1/g, '/').replace(/~0/g, '~'));
+
+  let current: unknown = root;
+  for (const part of parts) {
+    if (typeof current !== 'object' || current === null || !(part in current)) {
+      throw new UnresolvedRefError(ref, location);
+    }
+    current = (current as Record<string, unknown>)[part];
+  }
+
+  return current;
+}
+
+export function dereferenceSchema(
+  root: Record<string, unknown>,
+  schema: unknown,
+  seen: Set<unknown> = new Set(),
+  path: string = '#'
+): unknown {
+  if (typeof schema !== 'object' || schema === null) {
+    return schema;
+  }
+
+  if (seen.has(schema)) {
+    return schema; // Break circular recursion
+  }
+  seen.add(schema);
+
+  if (Array.isArray(schema)) {
+    return schema.map((item, index) => dereferenceSchema(root, item, seen, `${path}/${index}`));
+  }
+
+  const obj = schema as Record<string, unknown>;
+  if (typeof obj['$ref'] === 'string') {
+    const resolved = resolveLocalRef(root, obj['$ref'], `${path}/$ref`);
+    return dereferenceSchema(root, resolved, seen, obj['$ref']);
+  }
+
+  const result: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(obj)) {
+    result[key] = dereferenceSchema(root, val, seen, `${path}/${key.replace(/~/g, '~0').replace(/\//g, '~1')}`);
+  }
+  return result;
+}
