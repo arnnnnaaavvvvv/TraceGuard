@@ -1,5 +1,4 @@
 import { writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { buildCliProgram, type CliHandlers } from './args.js';
 import {
   createTraceGuard,
@@ -14,6 +13,8 @@ import {
   type Report,
 } from '../index.js';
 import { TraceGuardError } from '../types/errors.js';
+import { validateSafeWritePath } from '../baseline/store.js';
+import { redactText } from '../report/redaction.js';
 
 export async function runCli(argv: string[] = process.argv): Promise<number> {
   let exitCode = 0;
@@ -48,13 +49,13 @@ export async function runCli(argv: string[] = process.argv): Promise<number> {
     return exitCode;
   } catch (err) {
     if (err instanceof TraceGuardError) {
-      process.stderr.write(`Error [${err.code}]: ${err.message}\n`);
-      process.stderr.write(`Hint: ${err.hint}\n`);
+      process.stderr.write(`Error [${err.code}]: ${redactText(err.message)}\n`);
+      process.stderr.write(`Hint: ${redactText(err.hint)}\n`);
       return err.exitCode;
     }
 
     const message = err instanceof Error ? err.message : String(err);
-    process.stderr.write(`Unexpected error: ${message}\n`);
+    process.stderr.write(`Unexpected error: ${redactText(message)}\n`);
     return 2;
   }
 }
@@ -141,7 +142,8 @@ function outputReport(report: Report, format?: string, outputPath?: string): voi
   }
 
   if (outputPath) {
-    writeFileSync(resolve(outputPath), output, 'utf-8');
+    const safePath = validateSafeWritePath(outputPath);
+    writeFileSync(safePath, output, { encoding: 'utf-8', mode: 0o600 });
     process.stdout.write(`Report written to '${outputPath}'.\n`);
   } else {
     process.stdout.write(output + '\n');
@@ -150,6 +152,17 @@ function outputReport(report: Report, format?: string, outputPath?: string): voi
 
 // Automatically execute when run as binary (outside vitest test runner)
 if (!process.env.VITEST) {
+  process.on('unhandledRejection', (reason) => {
+    const msg = reason instanceof Error ? reason.message : String(reason);
+    process.stderr.write(`Unhandled rejection: ${redactText(msg)}\n`);
+    process.exit(2);
+  });
+
+  process.on('uncaughtException', (err) => {
+    process.stderr.write(`Uncaught exception: ${redactText(err.message)}\n`);
+    process.exit(2);
+  });
+
   runCli().then((code) => {
     if (code !== 0) process.exit(code);
   });

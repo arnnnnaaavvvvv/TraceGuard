@@ -45,6 +45,7 @@ export function validateSchema(
   const validator = version === '3.0' ? ajv30 : ajv31;
 
   try {
+    assertSafeRegexPatterns(preparedSchema);
     const validate = validator.compile(preparedSchema);
     const valid = validate(data);
     if (valid) return [];
@@ -62,6 +63,27 @@ export function validateSchema(
         schemaPath: '#',
       },
     ];
+  }
+}
+
+function assertSafeRegexPatterns(node: unknown): void {
+  if (typeof node !== 'object' || node === null) return;
+  if (Array.isArray(node)) {
+    for (const item of node) assertSafeRegexPatterns(item);
+    return;
+  }
+  const obj = node as Record<string, unknown>;
+  if (typeof obj['pattern'] === 'string') {
+    const pat = obj['pattern'];
+    if (pat.length > 256) {
+      throw new Error(`Schema regex pattern exceeds maximum safe length of 256 characters (${pat.length} chars)`);
+    }
+    if (/\([^)]*[+*]\??\)[+*{]/.test(pat) || /\([^)]*\|[^)]*[+*]\??\)[+*{]/.test(pat)) {
+      throw new Error(`Potentially catastrophic regular expression pattern detected in 'pattern': '${pat}'. Nested quantifiers are rejected to prevent ReDoS.`);
+    }
+  }
+  for (const val of Object.values(obj)) {
+    assertSafeRegexPatterns(val);
   }
 }
 

@@ -1,7 +1,8 @@
 import type { Report } from '../types/core.js';
-import { redactText } from './redaction.js';
+import { redactReport, redactText } from './redaction.js';
 
-export function formatTerminalReport(report: Report): string {
+export function formatTerminalReport(rawReport: Report): string {
+  const report = redactReport(rawReport);
   const lines: string[] = [];
 
   // Header Box
@@ -21,13 +22,13 @@ export function formatTerminalReport(report: Report): string {
 
     for (const [idx, f] of report.findings.entries()) {
       const suppressionTag = f.suppressed ? ' [SUPPRESSED (BASELINE)]' : '';
-      lines.push(` #${idx + 1} [${f.severity.toUpperCase()}] [${f.compatibility}] ${f.ruleId}${suppressionTag}`);
-      lines.push(`    Target:     ${f.method} ${f.endpoint}`);
-      lines.push(`    Location:   ${f.location}`);
-      lines.push(`    Expected:   ${redactText(f.expected)}`);
-      lines.push(`    Actual:     ${redactText(f.actual)}`);
-      lines.push(`    Message:    ${redactText(f.message)}`);
-      lines.push(`    Suggestion: ${f.suggestion}`);
+      lines.push(` #${idx + 1} [${f.severity.toUpperCase()}] [${f.compatibility}] ${sanitizeTerminal(f.ruleId)}${suppressionTag}`);
+      lines.push(`    Target:     ${sanitizeTerminal(f.method)} ${sanitizeTerminal(f.endpoint)}`);
+      lines.push(`    Location:   ${sanitizeTerminal(f.location)}`);
+      lines.push(`    Expected:   ${sanitizeTerminal(f.expected)}`);
+      lines.push(`    Actual:     ${sanitizeTerminal(f.actual)}`);
+      lines.push(`    Message:    ${sanitizeTerminal(f.message)}`);
+      lines.push(`    Suggestion: ${sanitizeTerminal(f.suggestion)}`);
       lines.push('--------------------------------------------------------------------------------');
     }
   }
@@ -47,10 +48,18 @@ export function formatTerminalReport(report: Report): string {
   } else {
     lines.push(' STATUS: [FAIL] CI Policy Threshold Violations:');
     for (const reason of report.policyResult.failureReasons) {
-      lines.push(`   * ${reason}`);
+      lines.push(`   * ${sanitizeTerminal(redactText(reason))}`);
     }
   }
   lines.push('================================================================================');
 
   return lines.join('\n');
+}
+
+export function sanitizeTerminal(text: string): string {
+  if (!text) return text;
+  // Strip ANSI escape sequences
+  const noAnsi = text.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+  // Strip control characters
+  return noAnsi.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
 }

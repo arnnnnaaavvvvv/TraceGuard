@@ -1,7 +1,8 @@
 import type { Report } from '../types/core.js';
-import { redactText } from './redaction.js';
+import { redactReport, redactText } from './redaction.js';
 
-export function formatMarkdownReport(report: Report): string {
+export function formatMarkdownReport(rawReport: Report): string {
+  const report = redactReport(rawReport);
   const lines: string[] = [];
   const statusIcon = report.policyResult.passed ? '✅ **PASSED**' : '❌ **FAILED**';
 
@@ -29,7 +30,7 @@ export function formatMarkdownReport(report: Report): string {
   if (!report.policyResult.passed) {
     lines.push('### ⚠️ Policy Violations');
     for (const r of report.policyResult.failureReasons) {
-      lines.push(`- ${r}`);
+      lines.push(`- ${sanitizeMarkdown(redactText(r))}`);
     }
     lines.push('');
   }
@@ -42,10 +43,10 @@ export function formatMarkdownReport(report: Report): string {
     lines.push('| :--- | :--- | :--- | :--- | :--- | :--- |');
 
     for (const f of report.findings) {
-      const target = `\`${f.method} ${f.endpoint}\``;
+      const target = `\`${sanitizeMarkdown(f.method)} ${sanitizeMarkdown(f.endpoint)}\``;
       const suppressedBadge = f.suppressed ? ' *(suppressed)*' : '';
       lines.push(
-        `| \`${f.ruleId}\`${suppressedBadge} | **${f.severity}** | \`${f.compatibility}\` | ${target} | ${escapePipes(redactText(f.message))} | ${escapePipes(f.suggestion)} |`
+        `| \`${sanitizeMarkdown(f.ruleId)}\`${suppressedBadge} | **${sanitizeMarkdown(f.severity)}** | \`${sanitizeMarkdown(f.compatibility)}\` | ${target} | ${sanitizeMarkdown(f.message)} | ${sanitizeMarkdown(f.suggestion)} |`
       );
     }
     lines.push('');
@@ -54,6 +55,15 @@ export function formatMarkdownReport(report: Report): string {
   return lines.join('\n');
 }
 
-function escapePipes(text: string): string {
-  return text.replace(/\|/g, '\\|').replace(/\n/g, ' ');
+export function sanitizeMarkdown(text: string): string {
+  if (!text) return text;
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\|/g, '\\|')
+    .replace(/\[/g, '&#91;')
+    .replace(/\]/g, '&#93;')
+    .replace(/`/g, '\\`')
+    .replace(/\r?\n/g, ' ');
 }

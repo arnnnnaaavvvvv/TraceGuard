@@ -26,16 +26,49 @@ export async function executeRequest(
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), options.timeoutMs);
 
-  let rawRes: Response;
   try {
-    rawRes = await fetch(url, {
+    const rawRes = await fetch(url, {
       method,
       headers,
       signal: controller.signal,
+      redirect: 'manual',
     });
+
+    const responseHeaders: Record<string, string> = {};
+    rawRes.headers.forEach((val, key) => {
+      responseHeaders[key.toLowerCase()] = val;
+    });
+
+    const contentType = responseHeaders['content-type'];
+    const bodyText = await readBodyWithLimit(rawRes, options.maxBodySizeBytes, url, controller.signal);
+
+    const isJsonHeader = !!contentType && contentType.toLowerCase().includes('application/json');
+    let bodyJson: unknown = undefined;
+    let malformedJson = false;
+
+    if (bodyText.length > 0) {
+      try {
+        bodyJson = JSON.parse(bodyText);
+      } catch {
+        if (isJsonHeader) {
+          malformedJson = true;
+        }
+      }
+    }
+
+    return {
+      status: rawRes.status,
+      statusText: rawRes.statusText,
+      headers: responseHeaders,
+      contentType,
+      bodyText,
+      bodyJson,
+      isJson: isJsonHeader && !malformedJson,
+      malformedJson,
+    };
   } catch (err) {
-    clearTimeout(timer);
-    if (err instanceof Error && err.name === 'AbortError') {
+    if (err instanceof ConfigError) throw err;
+    if (controller.signal.aborted || (err instanceof Error && (err.name === 'AbortError' || err.message.toLowerCase().includes('aborted')))) {
       throw new TimeoutError(url, options.timeoutMs);
     }
     const msg = err instanceof Error ? err.message : String(err);
@@ -43,42 +76,14 @@ export async function executeRequest(
   } finally {
     clearTimeout(timer);
   }
-
-  const responseHeaders: Record<string, string> = {};
-  rawRes.headers.forEach((val, key) => {
-    responseHeaders[key.toLowerCase()] = val;
-  });
-
-  const contentType = responseHeaders['content-type'];
-  const bodyText = await readBodyWithLimit(rawRes, options.maxBodySizeBytes, url);
-
-  const isJsonHeader = !!contentType && contentType.toLowerCase().includes('application/json');
-  let bodyJson: unknown = undefined;
-  let malformedJson = false;
-
-  if (bodyText.length > 0) {
-    try {
-      bodyJson = JSON.parse(bodyText);
-    } catch {
-      if (isJsonHeader) {
-        malformedJson = true;
-      }
-    }
-  }
-
-  return {
-    status: rawRes.status,
-    statusText: rawRes.statusText,
-    headers: responseHeaders,
-    contentType,
-    bodyText,
-    bodyJson,
-    isJson: isJsonHeader && !malformedJson,
-    malformedJson,
-  };
 }
 
-async function readBodyWithLimit(response: Response, maxBytes: number, url: string): Promise<string> {
+async function readBodyWithLimit(
+  response: Response,
+  maxBytes: number,
+  url: string,
+  signal?: AbortSignal
+): Promise<string> {
   if (!response.body) return '';
 
   const reader = response.body.getReader();
@@ -87,6 +92,10 @@ async function readBodyWithLimit(response: Response, maxBytes: number, url: stri
 
   try {
     while (true) {
+      if (signal?.aborted) {
+        await reader.cancel();
+        throw new Error('This operation was aborted');
+      }
       const { done, value } = await reader.read();
       if (done) break;
       if (value) {
@@ -103,6 +112,9 @@ async function readBodyWithLimit(response: Response, maxBytes: number, url: stri
     }
   } catch (err) {
     if (err instanceof ConfigError) throw err;
+    if (signal?.aborted || (err instanceof Error && (err.name === 'AbortError' || err.message.toLowerCase().includes('aborted')))) {
+      throw err;
+    }
     throw new NetworkError(`Failed to read response body: ${err instanceof Error ? err.message : String(err)}`, url);
   }
 

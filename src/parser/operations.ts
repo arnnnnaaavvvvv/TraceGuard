@@ -4,6 +4,7 @@ import type {
   ParameterDefinition,
   ResponseDefinition,
 } from '../types/core.js';
+import { SpecError } from '../types/errors.js';
 
 const SUPPORTED_METHODS: readonly HttpMethod[] = [
   'GET',
@@ -14,6 +15,8 @@ const SUPPORTED_METHODS: readonly HttpMethod[] = [
   'PATCH',
   'DELETE',
 ];
+
+const MAX_OPERATIONS_COUNT = 1000;
 
 export function extractOperations(document: Record<string, unknown>): readonly Operation[] {
   const paths = document['paths'];
@@ -45,6 +48,15 @@ export function extractOperations(document: Record<string, unknown>): readonly O
         responses: parseResponses(op['responses']),
         security: parseSecurity(op['security'] ?? document['security']),
       });
+
+      if (operations.length > MAX_OPERATIONS_COUNT) {
+        throw new SpecError(
+          `Specification exceeds maximum limit of ${MAX_OPERATIONS_COUNT} operations.`,
+          undefined,
+          '#/paths',
+          'Filter operations or split the specification file.'
+        );
+      }
     }
   }
 

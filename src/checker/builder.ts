@@ -1,5 +1,6 @@
 import type { Operation, HttpMethod } from '../types/core.js';
 import type { TraceGuardConfig } from '../config/schema.js';
+import { ConfigError } from '../types/errors.js';
 
 export interface BuiltRequest {
   readonly canBuild: boolean;
@@ -15,10 +16,10 @@ export function buildRequest(
   operation: Operation,
   config: TraceGuardConfig
 ): BuiltRequest {
-  if (config.safeMethodsOnly && !SAFE_METHODS.includes(operation.method)) {
+  if (!SAFE_METHODS.includes(operation.method)) {
     return {
       canBuild: false,
-      skipReason: `Method ${operation.method} is a mutating HTTP verb. Mutating methods are disabled for safety in v0.1.0.`,
+      skipReason: `Method ${operation.method} is a mutating HTTP verb. Mutating methods are strictly disabled for safety in v0.1.0.`,
       url: '',
       method: operation.method,
       headers: {},
@@ -26,12 +27,32 @@ export function buildRequest(
   }
 
   const baseUrl = (config.baseUrl || 'http://localhost:8080').replace(/\/$/, '');
+  let base: URL;
+  try {
+    base = new URL(baseUrl);
+  } catch {
+    return {
+      canBuild: false,
+      skipReason: `Invalid baseUrl '${baseUrl}'.`,
+      url: '',
+      method: operation.method,
+      headers: {},
+    };
+  }
+
   let resolvedPath = operation.pathTemplate;
   const queryParams = new URLSearchParams();
   const requestHeaders: Record<string, string> = {
     Accept: 'application/json, */*',
-    ...(config.headers || {}),
   };
+
+  // Process configured headers with security validation
+  for (const [hName, hVal] of Object.entries(config.headers || {})) {
+    validateHeader(hName, hVal);
+    if (!isForbiddenHeader(hName)) {
+      requestHeaders[hName] = hVal;
+    }
+  }
 
   const templateConfig = config.pathParameters?.[operation.pathTemplate];
 
@@ -56,19 +77,53 @@ export function buildRequest(
         queryParams.set(param.name, 'test');
       }
     } else if (param.in === 'header' && val !== undefined) {
-      requestHeaders[param.name] = String(val);
+      const strVal = String(val);
+      validateHeader(param.name, strVal);
+      if (!isForbiddenHeader(param.name)) {
+        requestHeaders[param.name] = strVal;
+      }
     }
   }
 
-  const queryString = queryParams.toString();
-  const fullUrl = `${baseUrl}${resolvedPath}${queryString ? `?${queryString}` : ''}`;
+  // Prevent protocol-relative URL injection (e.g. //attacker.com) and ensure path starts with '/'
+  const normalizedPath = resolvedPath.startsWith('/') ? resolvedPath.replace(/^\/+/, '/') : `/${resolvedPath}`;
+  const targetUrl = new URL(normalizedPath, base.origin);
+
+  // Security check: Origin MUST NOT change under any circumstances
+  if (targetUrl.origin !== base.origin) {
+    return {
+      canBuild: false,
+      skipReason: `Path '${operation.pathTemplate}' resolves outside the configured base origin '${base.origin}'.`,
+      url: '',
+      method: operation.method,
+      headers: {},
+    };
+  }
+
+  for (const [k, v] of queryParams.entries()) {
+    targetUrl.searchParams.set(k, v);
+  }
 
   return {
     canBuild: true,
-    url: fullUrl,
+    url: targetUrl.toString(),
     method: operation.method,
     headers: requestHeaders,
   };
+}
+
+function validateHeader(name: string, value: string): void {
+  if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
+    throw new ConfigError(`Invalid HTTP header name '${name}'. Header names must only contain alphanumeric characters, underscores, and hyphens.`);
+  }
+  if (/[\r\n\0]/.test(value)) {
+    throw new ConfigError(`HTTP header '${name}' contains illegal CRLF or control characters.`);
+  }
+}
+
+function isForbiddenHeader(name: string): boolean {
+  const lower = name.toLowerCase();
+  return lower === 'x-http-method-override' || lower === 'x-method-override' || lower === 'x-http-method';
 }
 
 function resolveParamValue(
