@@ -84,7 +84,7 @@ Tracking progress across milestones M1 to M5 according to `docs/PLAN.md`.
   - [x] `docs/report-schema.md`
   - [x] `docs/troubleshooting.md`
 - [x] Packaging dry run: `npm pack --dry-run` and clean install smoke test in temporary directory
-- [ ] Push to GitHub repository `https://github.com/arnnnnaaavvvvv/TraceGuard`
+- [x] Push to GitHub repository `https://github.com/arnnnnaaavvvvv/TraceGuard`
 
 ---
 
