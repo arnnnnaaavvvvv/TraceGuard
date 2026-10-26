@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" width="900" height="240">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@500;700&amp;display=swap');
+      .title {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 88px;
+        fill: #ffffff;
+        letter-spacing: 6px;
+      }
+      .tagline {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 24px;
+        fill: #cccccc;
+        letter-spacing: 4px;
+      }
+      .badge-text {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 16px;
+        letter-spacing: 2px;
+      }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="240" fill="#000000" rx="12" />
+  <rect x="12" y="12" width="876" height="216" fill="none" stroke="#333333" stroke-width="2" rx="8" />
+
+  <!-- Shield / Guard Accent Motif -->
+  <g transform="translate(48, 48)">
+    <polygon points="40,10 75,25 75,70 40,95 5,70 5,25" fill="#ffffff" />
+    <polygon points="40,18 67,30 67,66 40,86 13,66 13,30" fill="#000000" />
+    <polyline points="28,52 38,62 54,42" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+
+  <!-- Typography -->
+  <text x="145" y="112" class="title">TRACEGUARD</text>
+  <text x="148" y="150" class="tagline">CATCH BREAKING API CHANGES BEFORE PRODUCTION</text>
+
+  <!-- Badges -->
+  <g transform="translate(148, 172)">
+    <rect x="0" y="0" width="130" height="28" fill="#ffffff" rx="4" />
+    <text x="65" y="19" fill="#000000" text-anchor="middle" class="badge-text">DETERMINISTIC</text>
+
+    <rect x="140" y="0" width="130" height="28" fill="#1a1a1a" stroke="#444444" stroke-width="1" rx="4" />
+    <text x="205" y="19" fill="#ffffff" text-anchor="middle" class="badge-text">OFFLINE &bull; ZERO AI</text>
+
+    <rect x="280" y="0" width="140" height="28" fill="#1a1a1a" stroke="#444444" stroke-width="1" rx="4" />
+    <text x="350" y="19" fill="#ffffff" text-anchor="middle" class="badge-text">OPENAPI 3.0 &amp; 3.1</text>
+  </g>
+</svg>

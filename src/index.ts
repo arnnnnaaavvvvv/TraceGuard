@@ -34,6 +34,7 @@ export * from './report/redaction.js';
 export * from './report/terminal.js';
 export * from './report/json.js';
 export * from './report/markdown.js';
+export * from './report/html.js';
 
 export interface TraceGuardClient {
   readonly config: TraceGuardConfig;

@@ -10,6 +10,7 @@ import {
   formatTerminalReport,
   formatJsonReport,
   formatMarkdownReport,
+  formatHtmlReport,
   type Report,
 } from '../index.js';
 import { TraceGuardError } from '../types/errors.js';
@@ -133,6 +134,8 @@ function outputReport(report: Report, format?: string, outputPath?: string): voi
     output = formatJsonReport(report);
   } else if (format === 'markdown') {
     output = formatMarkdownReport(report);
+  } else if (format === 'html') {
+    output = formatHtmlReport(report);
   } else {
     output = formatTerminalReport(report);
   }

@@ -1,10 +1,8 @@
-# TraceGuard
+<p align="center">
+  <img src="assets/traceguard-banner.svg" alt="TraceGuard Banner" width="900" />
+</p>
 
-```
-================================================================================
-  TRACEGUARD  |  Deterministic OpenAPI Contract Testing & Diffing
-================================================================================
-```
+# TraceGuard
 
 > **Tagline:** Catch breaking API changes before they reach production.
 

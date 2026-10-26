@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { formatTerminalReport } from '../../src/report/terminal.js';
 import { formatJsonReport } from '../../src/report/json.js';
 import { formatMarkdownReport } from '../../src/report/markdown.js';
+import { formatHtmlReport } from '../../src/report/html.js';
 import type { Report } from '../../src/types/core.js';
 
 describe('Report Formatters', () => {
@@ -66,5 +67,14 @@ describe('Report Formatters', () => {
     expect(md).toContain('## TraceGuard Contract Report: ❌ **FAILED**');
     expect(md).toContain('| Checked Operations | 1 / 2 |');
     expect(md).toContain('| `TG-CONTRACT-TYPE-MISMATCH` |');
+  });
+
+  it('formats HTML report with Google Font Bebas Neue and black-and-white theme', () => {
+    const html = formatHtmlReport(sampleReport);
+    expect(html).toContain('<!DOCTYPE html>');
+    expect(html).toContain('family=Bebas+Neue');
+    expect(html).toContain('TRACEGUARD');
+    expect(html).toContain('TG-CONTRACT-TYPE-MISMATCH');
+    expect(html).toContain('FAILED');
   });
 });
