@@ -488,6 +488,147 @@
       text-transform: uppercase;
     }
 
+    /* Installation Matrix Section */
+    .install-section {
+      margin-bottom: 80px;
+    }
+    .install-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+    .install-nav {
+      display: flex;
+      background: #090c14;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    .install-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 1px;
+      padding: 16px 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .install-tab-btn:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .install-tab-btn.active {
+      color: var(--cyan);
+      border-bottom-color: var(--cyan);
+      background: rgba(0, 242, 254, 0.05);
+    }
+    .install-body {
+      padding: 32px;
+    }
+    .pkg-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .pkg-label {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-family: var(--font-code);
+      text-transform: uppercase;
+      margin-right: 8px;
+    }
+    .pkg-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--font-code);
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pkg-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+    .pkg-btn.active {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: var(--cyan);
+      color: #fff;
+      font-weight: 600;
+    }
+    .code-snippet-box {
+      background: #090c14;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      position: relative;
+      font-family: var(--font-code);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+    .code-snippet-box .copy-icon-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-family: var(--font-code);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .code-snippet-box .copy-icon-btn:hover {
+      background: rgba(0, 242, 254, 0.2);
+      color: #fff;
+      border-color: var(--cyan);
+    }
+    .install-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .detail-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+    }
+    .detail-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 1px;
+      color: var(--text);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .detail-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
@@ -524,6 +665,7 @@
         <div class="logo-text">TRACEGUARD</div>
       </a>
       <ul class="nav-links">
+        <li><a href="#install" class="nav-link">Installation</a></li>
         <li><a href="#features" class="nav-link">Features</a></li>
         <li><a href="#demo" class="nav-link">Interactive Demo</a></li>
         <li><a href="#architecture" class="nav-link">Architecture</a></li>
@@ -606,6 +748,84 @@
         <div class="stat-item">
           <div class="stat-val">10 Attack</div>
           <div class="stat-lbl">Surfaces Hardened</div>
+        </div>
+      </div>
+    </div>
+  <!-- Installation & Setup Guide Section -->
+  <section class="container install-section" id="install">
+    <div class="section-header">
+      <div class="section-eyebrow">Get Started Fast</div>
+      <h2 class="section-heading">Installation &amp; Setup Guide</h2>
+      <p style="color: var(--text-muted); max-width: 650px; margin: 12px auto 0; font-size: 15px;">
+        Deploy TraceGuard globally across developer machines, inside project repositories, or as an automated pull-request gate in your CI/CD pipelines.
+      </p>
+    </div>
+
+    <div class="install-card">
+      <!-- Method Navigation Tabs -->
+      <div class="install-nav">
+        <button class="install-tab-btn active" onclick="switchInstallMethod('global')">
+          <span>🌐</span> Global CLI
+        </button>
+        <button class="install-tab-btn" onclick="switchInstallMethod('npx')">
+          <span>⚡</span> Zero-Install (npx)
+        </button>
+        <button class="install-tab-btn" onclick="switchInstallMethod('local')">
+          <span>📦</span> Project Dependency
+        </button>
+        <button class="install-tab-btn" onclick="switchInstallMethod('sdk')">
+          <span>💻</span> TypeScript SDK
+        </button>
+        <button class="install-tab-btn" onclick="switchInstallMethod('ci')">
+          <span>🚀</span> CI/CD GitHub Actions
+        </button>
+      </div>
+
+      <div class="install-body">
+        <!-- Package Manager Selector -->
+        <div class="pkg-selector" id="pkgSelectorRow">
+          <span class="pkg-label">Package Manager:</span>
+          <button class="pkg-btn active" onclick="switchPkgManager('npm')">npm</button>
+          <button class="pkg-btn" onclick="switchPkgManager('pnpm')">pnpm</button>
+          <button class="pkg-btn" onclick="switchPkgManager('yarn')">yarn</button>
+          <button class="pkg-btn" onclick="switchPkgManager('bun')">bun</button>
+        </div>
+
+        <!-- Code Snippet Display with Copy Button -->
+        <div class="code-snippet-box">
+          <button class="copy-icon-btn" onclick="copySnippetCode()" id="snippetCopyBtn">Copy Command</button>
+          <pre style="margin: 0;"><code id="snippetCode" style="color: #00f2fe; background: transparent; padding: 0;">npm install -g @arnavvv/traceguard</code></pre>
+        </div>
+
+        <!-- Dynamic Explanations & Workflow Guidance -->
+        <div id="installDetailsContent"></div>
+
+        <!-- Requirements & Compatibility Footer -->
+        <div class="install-details">
+          <div class="detail-card">
+            <div class="detail-title">
+              <span style="color: var(--cyan);">✓</span> Runtime Requirements
+            </div>
+            <div class="detail-desc">
+              Requires <strong>Node.js &gt;= 20.18.0 (LTS)</strong>. Verified on Node 20, 22, and 24 across Windows, macOS, and Linux.
+            </div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-title">
+              <span style="color: var(--emerald);">✓</span> Zero Native Dependencies
+            </div>
+            <div class="detail-desc">
+              Pure TypeScript compiled to ESM and CJS. Uses standard Fetch API and Node builtins. Zero external system binaries.
+            </div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-title">
+              <span style="color: var(--amber);">✓</span> 100% Offline &amp; Private
+            </div>
+            <div class="detail-desc">
+              Operates entirely locally with zero telemetry, zero analytics, zero external network calls, and no cloud accounts.
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -850,6 +1070,173 @@ Baseline snapshot saved with 2 entries.
       btn.textContent = 'Copied!';
       setTimeout(() => btn.textContent = 'Copy', 2000);
     }
+
+    // --- Installation Matrix Logic ---
+    let currentInstallMethod = 'global';
+    let currentPkgManager = 'npm';
+
+    const installData = {
+      global: {
+        npm: 'npm install -g @arnavvv/traceguard',
+        pnpm: 'pnpm add -g @arnavvv/traceguard',
+        yarn: 'yarn global add @arnavvv/traceguard',
+        bun: 'bun add -g @arnavvv/traceguard',
+        showPkgRow: true,
+        desc: `
+          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 14px;">
+            Installs the <code>traceguard</code> executable system-wide. Run contract tests, compare specifications, or launch the visual UI from <strong>any folder</strong> or repository:
+          </p>
+          <div style="background: rgba(0,0,0,0.3); border-radius: 6px; padding: 12px 16px; font-family: var(--font-code); font-size: 13px; color: #a9bbd1;">
+            <div style="margin-bottom: 6px;"><span style="color: var(--cyan);">$</span> traceguard --help <span style="color: var(--text-dim);"># Verify installation</span></div>
+            <div style="margin-bottom: 6px;"><span style="color: var(--cyan);">$</span> traceguard diff ./openapi.v1.yaml ./openapi.v2.yaml <span style="color: var(--text-dim);"># Breaking changes diff</span></div>
+            <div><span style="color: var(--cyan);">$</span> traceguard serve --port 3000 <span style="color: var(--text-dim);"># Launch visual web dashboard</span></div>
+          </div>
+        `
+      },
+      npx: {
+        npm: 'npx @arnavvv/traceguard --help',
+        pnpm: 'pnpm dlx @arnavvv/traceguard --help',
+        yarn: 'yarn dlx @arnavvv/traceguard --help',
+        bun: 'bunx @arnavvv/traceguard --help',
+        showPkgRow: true,
+        desc: `
+          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 14px;">
+            Execute directly in terminal with <strong>zero permanent installation</strong>. Ideal for one-off manual audits, quick git hooks, or ephemeral Docker containers:
+          </p>
+          <div style="background: rgba(0,0,0,0.3); border-radius: 6px; padding: 12px 16px; font-family: var(--font-code); font-size: 13px; color: #a9bbd1;">
+            <div style="margin-bottom: 6px;"><span style="color: var(--cyan);">$</span> npx @arnavvv/traceguard diff ./spec.base.yaml ./spec.head.yaml</div>
+            <div style="margin-bottom: 6px;"><span style="color: var(--cyan);">$</span> npx @arnavvv/traceguard check --spec ./openapi.yaml --base-url http://localhost:8080</div>
+            <div><span style="color: var(--cyan);">$</span> npx @arnavvv/traceguard serve</div>
+          </div>
+        `
+      },
+      local: {
+        npm: 'npm install --save-dev @arnavvv/traceguard',
+        pnpm: 'pnpm add -D @arnavvv/traceguard',
+        yarn: 'yarn add -D @arnavvv/traceguard',
+        bun: 'bun add -d @arnavvv/traceguard',
+        showPkgRow: true,
+        desc: `
+          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 14px;">
+            Save TraceGuard directly in your repository's <code>package.json</code> for locked versions, peer reviews, and reproducible team execution:
+          </p>
+          <div style="background: rgba(0,0,0,0.3); border-radius: 6px; padding: 12px 16px; font-family: var(--font-code); font-size: 13px; color: #a9bbd1;">
+            <div style="color: var(--text-dim); margin-bottom: 4px;">// Add to package.json scripts:</div>
+            <div style="margin-bottom: 4px;">"scripts": {</div>
+            <div style="margin-left: 16px; margin-bottom: 4px;">"test:contract": "traceguard check --spec ./openapi.yaml --base-url http://localhost:8080 --ci",</div>
+            <div style="margin-left: 16px;">"contract:diff": "traceguard diff ./openapi.base.yaml ./openapi.head.yaml --ci"</div>
+            <div>}</div>
+          </div>
+        `
+      },
+      sdk: {
+        npm: `import { createTraceGuard, compareContracts } from '@arnavvv/traceguard';
+
+// 1. Diffs two OpenAPI contracts programmatically:
+const diffReport = await compareContracts({
+  baseSpecPath: './openapi.base.yaml',
+  headSpecPath: './openapi.head.yaml',
+});
+
+// 2. Validates running API service against contract:
+const client = createTraceGuard({
+  spec: './openapi.yaml',
+  baseUrl: 'http://localhost:8080',
+});
+const checkReport = await client.check();`,
+        pnpm: '',
+        yarn: '',
+        bun: '',
+        showPkgRow: false,
+        desc: `
+          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 14px;">
+            Use the typed, promise-based TypeScript SDK inside Vitest, Jest, Playwright, or custom microservice test suites. Ships with full TypeScript definitions (<code>dist/index.d.ts</code>) and both ESM and CJS bundles.
+          </p>
+        `
+      },
+      ci: {
+        npm: `name: OpenAPI Contract Gate
+on: [push, pull_request]
+
+jobs:
+  contract-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Detect Breaking API Changes
+        run: npx @arnavvv/traceguard diff ./openapi.base.yaml ./openapi.head.yaml --ci --format markdown --output $GITHUB_STEP_SUMMARY`,
+        pnpm: '',
+        yarn: '',
+        bun: '',
+        showPkgRow: false,
+        desc: `
+          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 14px;">
+            Enforce zero breaking changes on every Git pull request. TraceGuard automatically formats GitHub Flavored Markdown and posts breaking change findings directly to the GitHub Actions Job Summary.
+          </p>
+        `
+      }
+    };
+
+    function switchInstallMethod(method) {
+      currentInstallMethod = method;
+      document.querySelectorAll('.install-tab-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.install-tab-btn')).find(b => {
+        if (method === 'global') return b.textContent.includes('Global');
+        if (method === 'npx') return b.textContent.includes('Zero-Install');
+        if (method === 'local') return b.textContent.includes('Dependency');
+        if (method === 'sdk') return b.textContent.includes('SDK');
+        if (method === 'ci') return b.textContent.includes('CI/CD');
+        return false;
+      });
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const data = installData[method];
+      const pkgRow = document.getElementById('pkgSelectorRow');
+      if (data.showPkgRow) {
+        pkgRow.style.display = 'flex';
+      } else {
+        pkgRow.style.display = 'none';
+      }
+
+      updateInstallSnippet();
+      document.getElementById('installDetailsContent').innerHTML = data.desc;
+    }
+
+    function switchPkgManager(pkg) {
+      currentPkgManager = pkg;
+      document.querySelectorAll('.pkg-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.pkg-btn')).find(b => b.textContent.trim() === pkg);
+      if (activeBtn) activeBtn.classList.add('active');
+      updateInstallSnippet();
+    }
+
+    function updateInstallSnippet() {
+      const codeEl = document.getElementById('snippetCode');
+      const data = installData[currentInstallMethod];
+      if (currentInstallMethod === 'sdk' || currentInstallMethod === 'ci') {
+        codeEl.textContent = data.npm;
+      } else {
+        codeEl.textContent = data[currentPkgManager] || data.npm;
+      }
+    }
+
+    function copySnippetCode() {
+      const text = document.getElementById('snippetCode').textContent;
+      navigator.clipboard.writeText(text);
+      const btn = document.getElementById('snippetCopyBtn');
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = 'Copy Command', 2000);
+    }
+
+    // Initialize installation section
+    switchInstallMethod('global');
 
     // Default tab
     switchTab('diff');
