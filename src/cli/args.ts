@@ -6,6 +6,7 @@ export interface CliHandlers {
   onBaselineSave: (path: string, options: Record<string, unknown>) => Promise<number>;
   onBaselineShow: (path: string) => Promise<number>;
   onBaselineClear: (path: string) => Promise<number>;
+  onServe?: (options: Record<string, unknown>) => Promise<number>;
 }
 
 export function buildCliProgram(handlers?: CliHandlers): Command {
@@ -14,7 +15,7 @@ export function buildCliProgram(handlers?: CliHandlers): Command {
   program
     .name('traceguard')
     .description('Deterministic OpenAPI contract testing and breaking change detection.')
-    .version('0.1.0', '-v, --version', 'Output the current version of TraceGuard');
+    .version('0.1.1', '-v, --version', 'Output the current version of TraceGuard');
 
   program
     .command('check')
@@ -86,6 +87,19 @@ export function buildCliProgram(handlers?: CliHandlers): Command {
     .action(async (path) => {
       if (handlers?.onBaselineClear) {
         const code = await handlers.onBaselineClear(path);
+        process.exitCode = code;
+      }
+    });
+
+  program
+    .command('serve')
+    .alias('ui')
+    .description('Launch the local visual dashboard and interactive playground.')
+    .option('-p, --port <number>', 'Port to listen on', '3000')
+    .option('--host <host>', 'Host to bind to', '0.0.0.0')
+    .action(async (options) => {
+      if (handlers?.onServe) {
+        const code = await handlers.onServe(options);
         process.exitCode = code;
       }
     });

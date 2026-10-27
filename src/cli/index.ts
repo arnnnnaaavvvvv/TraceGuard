@@ -1,5 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import { buildCliProgram, type CliHandlers } from './args.js';
+import { startServer } from './serve.js';
 import {
   createTraceGuard,
   compareContracts,
@@ -38,6 +39,10 @@ export async function runCli(argv: string[] = process.argv): Promise<number> {
     },
     onBaselineClear: async (path) => {
       exitCode = await handleBaselineClear(path);
+      return exitCode;
+    },
+    onServe: async (options) => {
+      exitCode = await handleServe(options);
       return exitCode;
     },
   };
@@ -126,6 +131,13 @@ async function handleBaselineShow(path: string): Promise<number> {
 async function handleBaselineClear(path: string): Promise<number> {
   clearBaseline(path);
   process.stdout.write(`Cleared baseline snapshot at '${path}'.\n`);
+  return 0;
+}
+
+async function handleServe(options: Record<string, unknown>): Promise<number> {
+  const port = options['port'] ? Number(options['port']) : 3000;
+  const host = (options['host'] as string) || '0.0.0.0';
+  await startServer({ port, host });
   return 0;
 }
 

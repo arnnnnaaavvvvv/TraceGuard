@@ -1,6 +1,6 @@
 {
   "name": "@arnavvv/traceguard",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Catch breaking API changes before they reach production.",
   "publishConfig": {
     "access": "public"
@@ -21,6 +21,7 @@
   },
   "files": [
     "dist",
+    "index.html",
     "README.md",
     "LICENSE"
   ],

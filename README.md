@@ -58,14 +58,28 @@ When diffing two versions of the contract where `email` is removed and `id` chan
 
 ---
 
-## Installation
+## Installation & Global Usage
 
+### 1. Global Installation (Use anywhere in any terminal)
 ```bash
-# As a local project dependency
-npm install --save-dev @arnavvv/traceguard
+npm install -g @arnavvv/traceguard
 
-# Or execute directly via npx
+# Available globally from any directory:
+traceguard --help
+traceguard diff ./openapi.v1.yaml ./openapi.v2.yaml
+traceguard serve --port 3000   # Launch visual dashboard & playground
+```
+
+### 2. Zero-Install via npx
+```bash
 npx @arnavvv/traceguard --help
+npx @arnavvv/traceguard diff ./openapi.v1.yaml ./openapi.v2.yaml
+npx @arnavvv/traceguard serve
+```
+
+### 3. Local Project Dependency
+```bash
+npm install --save-dev @arnavvv/traceguard
 ```
 
 *Requires Node.js `>= 20.18.0` (LTS).*
