@@ -629,6 +629,167 @@
       line-height: 1.5;
     }
 
+    /* Architecture Section */
+    .arch-section {
+      padding: 80px 0 100px;
+      border-top: 1px solid var(--border);
+    }
+    .arch-pipeline-container {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 40px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+    .arch-pipeline-nav {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .arch-step-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 8px;
+      padding: 12px 18px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      min-width: 170px;
+      transition: all 0.2s;
+    }
+    .arch-step-btn:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text);
+      border-color: rgba(0, 242, 254, 0.3);
+    }
+    .arch-step-btn.active {
+      background: rgba(0, 242, 254, 0.1);
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.2);
+    }
+    .arch-step-num {
+      font-family: var(--font-code);
+      font-size: 11px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .arch-step-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 0.5px;
+      color: #fff;
+    }
+    .arch-step-detail {
+      background: #090c14;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .arch-step-detail { grid-template-columns: 1fr; }
+    }
+    .arch-detail-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .arch-detail-title {
+      font-family: var(--font-display);
+      font-size: 24px;
+      letter-spacing: 1px;
+      color: var(--text);
+    }
+    .arch-file-badge {
+      font-family: var(--font-code);
+      font-size: 12px;
+      background: rgba(0, 242, 254, 0.12);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      color: var(--cyan);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .arch-detail-body {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+    .arch-card-box {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      font-family: var(--font-code);
+      font-size: 13px;
+      color: #a9bbd1;
+      overflow-x: auto;
+    }
+    .arch-module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .arch-module-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: all 0.2s;
+    }
+    .arch-module-card:hover {
+      border-color: rgba(0, 242, 254, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    .arch-mod-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .arch-mod-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      letter-spacing: 1px;
+      color: var(--text);
+    }
+    .arch-mod-badge {
+      font-family: var(--font-code);
+      font-size: 11px;
+      color: var(--cyan);
+      background: rgba(0, 242, 254, 0.1);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .arch-mod-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .arch-mod-list {
+      margin-top: 14px;
+      padding-left: 18px;
+      font-size: 13px;
+      color: #9cb2cf;
+    }
+    .arch-mod-list li {
+      margin-bottom: 6px;
+    }
+
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
@@ -937,6 +1098,171 @@
     </div>
   </section>
 
+  <!-- Architecture Section -->
+  <section class="container arch-section" id="architecture">
+    <div class="section-header">
+      <div class="section-eyebrow">Zero-Trust Pipeline</div>
+      <h2 class="section-heading">System Architecture</h2>
+      <p style="color: var(--text-muted); max-width: 720px; margin: 12px auto 0; font-size: 15px;">
+        TraceGuard is engineered around deterministic, immutable data streams. Every phase executes with bounded memory, hardened regex timeouts, and zero external network leaks.
+      </p>
+    </div>
+
+    <!-- Pipeline Flow Visual Explorer -->
+    <div class="arch-pipeline-container">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+        <span style="font-family: var(--font-code); font-size: 12px; color: var(--cyan); letter-spacing: 1px; text-transform: uppercase;">
+          Interactive Pipeline Flow (Click any stage to inspect internals)
+        </span>
+        <span style="font-family: var(--font-code); font-size: 12px; color: var(--text-dim);">
+          Pure Functions &amp; Immutable ASTs
+        </span>
+      </div>
+
+      <div class="arch-pipeline-nav">
+        <button class="arch-step-btn active" id="step-btn-parser" onclick="selectArchStep('parser')">
+          <span class="arch-step-num">Step 01</span>
+          <span class="arch-step-title">Spec Ingestion</span>
+        </button>
+        <button class="arch-step-btn" id="step-btn-normalize" onclick="selectArchStep('normalize')">
+          <span class="arch-step-num">Step 02</span>
+          <span class="arch-step-title">Normalizer</span>
+        </button>
+        <button class="arch-step-btn" id="step-btn-checker" onclick="selectArchStep('checker')">
+          <span class="arch-step-num">Step 03A</span>
+          <span class="arch-step-title">Live Checker</span>
+        </button>
+        <button class="arch-step-btn" id="step-btn-diff" onclick="selectArchStep('diff')">
+          <span class="arch-step-num">Step 03B</span>
+          <span class="arch-step-title">AST Diff Engine</span>
+        </button>
+        <button class="arch-step-btn" id="step-btn-baseline" onclick="selectArchStep('baseline')">
+          <span class="arch-step-num">Step 04</span>
+          <span class="arch-step-title">Baseline Filter</span>
+        </button>
+        <button class="arch-step-btn" id="step-btn-policy" onclick="selectArchStep('policy')">
+          <span class="arch-step-num">Step 05</span>
+          <span class="arch-step-title">Policy &amp; Secrets</span>
+        </button>
+        <button class="arch-step-btn" id="step-btn-exit" onclick="selectArchStep('exit')">
+          <span class="arch-step-num">Step 06</span>
+          <span class="arch-step-title">Exit Codes</span>
+        </button>
+      </div>
+
+      <div class="arch-step-detail">
+        <div>
+          <div class="arch-detail-header">
+            <span class="arch-step-num" id="archDetailNum">01 / Ingestion</span>
+            <span class="arch-file-badge" id="archDetailFile">src/parser/index.ts</span>
+          </div>
+          <h3 class="arch-detail-title" id="archDetailTitle">Spec Ingestion &amp; Local $ref Resolution</h3>
+          <div class="arch-detail-body" id="archDetailDesc" style="margin-top: 14px;"></div>
+        </div>
+        <div>
+          <div style="font-family: var(--font-code); font-size: 11px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px;">
+            Core Implementation Logic:
+          </div>
+          <pre class="arch-card-box" id="archDetailCode"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Module Deep Dives Grid -->
+    <div class="arch-module-grid">
+      <div class="arch-module-card">
+        <div class="arch-mod-head">
+          <h3 class="arch-mod-title">Local-Only Parser</h3>
+          <span class="arch-mod-badge">src/parser</span>
+        </div>
+        <p class="arch-mod-desc">
+          Safe YAML and JSON deserialization with strict local JSON-pointer resolution. Immune to SSRF, file traversal, and DNS rebinding attacks.
+        </p>
+        <ul class="arch-mod-list">
+          <li>Rejects remote HTTP/HTTPS schemas and external file paths.</li>
+          <li>Auto-detects OpenAPI 3.0.x vs 3.1.x dialects.</li>
+          <li>Cycles and recursion in schema references detected and handled.</li>
+        </ul>
+      </div>
+
+      <div class="arch-module-card">
+        <div class="arch-mod-head">
+          <h3 class="arch-mod-title">Bounded HTTP Checker</h3>
+          <span class="arch-mod-badge">src/checker</span>
+        </div>
+        <p class="arch-mod-desc">
+          High-performance contract tester utilizing Node.js native <code>fetch</code> with bounded execution guarantees and streaming response safety.
+        </p>
+        <ul class="arch-mod-list">
+          <li>10MB maximum response body streaming abort protection.</li>
+          <li>Per-request <code>AbortController</code> timeout guards against hung servers.</li>
+          <li>Dual Ajv engines: Ajv with nullable transforms (3.0) + Ajv2020 (3.1).</li>
+        </ul>
+      </div>
+
+      <div class="arch-module-card">
+        <div class="arch-mod-head">
+          <h3 class="arch-mod-title">Directional AST Comparator</h3>
+          <span class="arch-mod-badge">src/diff</span>
+        </div>
+        <p class="arch-mod-desc">
+          Differentiates request direction (client sending) from response direction (client consuming) across 10 formal compatibility rules.
+        </p>
+        <ul class="arch-mod-list">
+          <li>Widening enum on request is safe; narrowing enum on response is breaking.</li>
+          <li>Adding required request body breaks clients; adding response fields is safe.</li>
+          <li>Polymorphic <code>oneOf</code> / <code>anyOf</code> marked conservatively as <code>UNKNOWN</code>.</li>
+        </ul>
+      </div>
+
+      <div class="arch-module-card">
+        <div class="arch-mod-head">
+          <h3 class="arch-mod-title">SHA-256 Baseline Quarantine</h3>
+          <span class="arch-mod-badge">src/baseline</span>
+        </div>
+        <p class="arch-mod-desc">
+          Quarantines legacy contract mismatches into an audited <code>.traceguard-baseline.json</code> snapshot file so only new regressions fail builds.
+        </p>
+        <ul class="arch-mod-list">
+          <li>Cryptographic fingerprint: <code>SHA-256(ruleId:method:path:location)</code>.</li>
+          <li>Zero storage of customer payloads, responses, or secret keys.</li>
+          <li>Explicit <code>--force</code> flag required to prevent accidental snapshot overwrites.</li>
+        </ul>
+      </div>
+
+      <div class="arch-module-card">
+        <div class="arch-mod-head">
+          <h3 class="arch-mod-title">Secret Redaction &amp; Policy</h3>
+          <span class="arch-mod-badge">src/policy &amp; src/report</span>
+        </div>
+        <p class="arch-mod-desc">
+          Automated privacy sanitizers ensure zero credentials or tokens leak into terminal logs, CI comments, or saved report files.
+        </p>
+        <ul class="arch-mod-list">
+          <li>Automatic masking of <code>Bearer [REDACTED]</code>, cookies, and tokens.</li>
+          <li>ReDoS catastrophic backtracking guards on user validation regexes.</li>
+          <li>Multi-format reporters: Terminal, Markdown, JSON, and standalone HTML.</li>
+        </ul>
+      </div>
+
+      <div class="arch-module-card">
+        <div class="arch-mod-head">
+          <h3 class="arch-mod-title">Deterministic Exit Codes</h3>
+          <span class="arch-mod-badge">src/cli</span>
+        </div>
+        <p class="arch-mod-desc">
+          Built for seamless POSIX and CI pipe execution with unambiguous, standardized return codes for every run condition.
+        </p>
+        <ul class="arch-mod-list">
+          <li><code>0</code>: All checks passed or suppressed by baseline.</li>
+          <li><code>1</code>: Contract failure or breaking changes exceeded threshold.</li>
+          <li><code>2</code>: CLI syntax or command argument validation error.</li>
+          <li><code>3</code>: Fatal network connection error or unparsable spec.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer>
     <div class="container footer-inner">
@@ -1234,6 +1560,116 @@ jobs:
       btn.textContent = '✓ Copied!';
       setTimeout(() => btn.textContent = 'Copy Command', 2000);
     }
+
+    // --- Architecture Interactive Pipeline Logic ---
+    const archSteps = {
+      parser: {
+        num: '01 / Ingestion',
+        title: 'Spec Ingestion & Local $ref Dereferencing',
+        file: 'src/parser/index.ts',
+        desc: 'Loads YAML and JSON specifications directly from disk into immutable syntax trees. Local JSON pointers (<code>#/components/...</code>) are dereferenced recursively with cycle detection. External URLs (<code>http://</code>, <code>https://</code>) and remote file paths are blocked outright to guarantee offline execution and prevent Server-Side Request Forgery (SSRF).',
+        code: `// Strict local-only pointer dereferencing:
+if (ref.startsWith('http://') || ref.startsWith('https://')) {
+  throw new SecurityError('Remote $ref blocked: SSRF protection');
+}
+if (!ref.startsWith('#/')) {
+  throw new SecurityError('External file $ref blocked');
+}`
+      },
+      normalize: {
+        num: '02 / Normalization',
+        title: 'Operation AST Normalizer',
+        file: 'src/parser/normalize.ts',
+        desc: 'Translates complex, polymorphic OpenAPI 3.0.x and 3.1.x specifications into a flat, strongly typed sequence of <code>NormalizedOperation</code> records. Resolves path-level parameters, handles default responses, and normalizes media types (tolerating <code>application/json; charset=utf-8</code>).',
+        code: `export interface NormalizedOperation {
+  readonly method: 'get' | 'post' | 'put' | 'delete' | 'patch';
+  readonly path: string;
+  readonly operationId?: string;
+  readonly parameters: readonly ParameterObject[];
+  readonly responses: ReadonlyMap<string, ResponseObject>;
+  readonly openApiVersion: '3.0' | '3.1';
+}`
+      },
+      checker: {
+        num: '03A / Checker',
+        title: 'Bounded Runtime Live Checker',
+        file: 'src/checker/index.ts',
+        desc: 'Dispatches live HTTP probes against target services using Node.js native <code>fetch</code>. Uses streamed body reader to enforce strict <code>maxBodySizeBytes</code> memory limits, terminating connections mid-stream if payloads balloon. Routes schemas to standard <code>Ajv</code> (OpenAPI 3.0 with nullable pre-transforms) or <code>Ajv2020</code> (OpenAPI 3.1 Draft 2020-12).',
+        code: `// AbortController timeout & streaming memory protection:
+const response = await fetch(targetUrl, { signal: controller.signal });
+const reader = response.body.getReader();
+while (true) {
+  const { done, value } = await reader.read();
+  bytesRead += value.length;
+  if (bytesRead > MAX_BODY_BYTES) throw new PayloadTooLargeError();
+}`
+      },
+      diff: {
+        num: '03B / Spec Diff',
+        title: 'Directional Compatibility Diff Engine',
+        file: 'src/diff/index.ts',
+        desc: 'Compares two OpenAPI versions across 10 formal compatibility rules with directional semantics: <strong>Request Direction</strong> (old client calling new server: widening enums is safe, adding optional params is safe) vs <strong>Response Direction</strong> (old client consuming new responses: narrowing enums is breaking, removing required fields is breaking). Returns <code>UNKNOWN</code> for non-deterministic polymorphism.',
+        code: `// Directional Rule Evaluation:
+if (direction === 'response' && isEnumNarrowed(baseEnum, headEnum)) {
+  return createFinding('TG-COMPAT-RESPONSE-ENUM-NARROWED', 'CRITICAL');
+}
+if (direction === 'request' && isEnumExpanded(baseEnum, headEnum)) {
+  return null; // Safe for existing clients
+}`
+      },
+      baseline: {
+        num: '04 / Baseline',
+        title: 'SHA-256 Baseline Quarantine',
+        file: 'src/baseline/filter.ts',
+        desc: 'Computes cryptographic fingerprints: <code>SHA-256(ruleId + ":" + method + ":" + endpoint + ":" + location)</code>. Legacy contract drift or known technical debt is quarantined in <code>.traceguard-baseline.json</code> so existing flaws do not break your CI builds, while newly introduced regressions are blocked immediately.',
+        code: `// Deterministic finding fingerprint:
+function fingerprintFinding(f: Finding): string {
+  const seed = [f.ruleId, f.method, f.endpoint, f.location].join(':');
+  return crypto.createHash('sha256').update(seed).digest('hex');
+}`
+      },
+      policy: {
+        num: '05 / Policy & Secrets',
+        title: 'Policy Engine & Secret Masking',
+        file: 'src/policy/index.ts & src/report/sanitizer.ts',
+        desc: 'Evaluates unsuppressed findings against configurable CI thresholds. All reporters (Terminal, Markdown, JSON, HTML) run through automatic secret redaction: Authorization Bearer tokens, query credentials, cookie headers, and canary strings are masked with <code>[REDACTED]</code> before rendering.',
+        code: `// Canary & credential auto-masking:
+export function redactSecrets(text: string): string {
+  return text
+    .replace(/Bearer\\s+[A-Za-z0-9\\-_.~+/]+=*/gi, 'Bearer [REDACTED]')
+    .replace(/(password|secret|apiKey)=([^&\\s]+)/gi, '$1=[REDACTED]');
+}`
+      },
+      exit: {
+        num: '06 / Exit Codes',
+        title: 'Deterministic Process Exit Codes',
+        file: 'src/cli/index.ts',
+        desc: 'Integrates cleanly with GitHub Actions, GitLab CI, and Unix pipes with standard, deterministic exit codes: <strong>0</strong> (All checks passed), <strong>1</strong> (Breaking change or contract violation policy failed), <strong>2</strong> (CLI syntax or flag validation error), <strong>3</strong> (Fatal network timeout, connection refused, or unparsable spec).',
+        code: `enum ExitCode {
+  SUCCESS = 0,         // Clean or baseline-suppressed
+  POLICY_FAILURE = 1,  // Breaking change threshold exceeded
+  USAGE_ERROR = 2,     // Invalid CLI arguments
+  FATAL_ERROR = 3,     // Network crash or unresolvable spec
+}`
+      }
+    };
+
+    function selectArchStep(stepKey) {
+      document.querySelectorAll('.arch-step-btn').forEach(b => b.classList.remove('active'));
+      const btn = document.getElementById('step-btn-' + stepKey);
+      if (btn) btn.classList.add('active');
+
+      const data = archSteps[stepKey];
+      if (!data) return;
+      document.getElementById('archDetailNum').textContent = data.num;
+      document.getElementById('archDetailTitle').textContent = data.title;
+      document.getElementById('archDetailFile').textContent = data.file;
+      document.getElementById('archDetailDesc').innerHTML = data.desc;
+      document.getElementById('archDetailCode').textContent = data.code;
+    }
+
+    // Initialize architecture section
+    selectArchStep('parser');
 
     // Initialize installation section
     switchInstallMethod('global');
