@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TraceGuard — Catch Breaking API Changes Before Production</title>
+  <meta name="description" content="Deterministic, zero-dependency OpenAPI contract testing and breaking change detection for TypeScript & CI pipelines.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #07090e;
+      --bg-surface: #0d111a;
+      --bg-surface-elevated: #141926;
+      --bg-card: rgba(19, 25, 38, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(0, 242, 254, 0.4);
+      --text: #f0f4fc;
+      --text-muted: #8b9bb4;
+      --text-dim: #54627a;
+      --cyan: #00f2fe;
+      --blue: #4facfe;
+      --emerald: #00e676;
+      --crimson: #ff3366;
+      --amber: #ffb300;
+      --glow-cyan: 0 0 35px rgba(0, 242, 254, 0.25);
+      --glow-crimson: 0 0 35px rgba(255, 51, 102, 0.25);
+      --radius: 12px;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(0, 242, 254, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(79, 172, 254, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 50% 90%, rgba(255, 51, 102, 0.03) 0%, transparent 40%);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7, 9, 14, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .logo-badge {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: #000;
+      font-weight: 900;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    }
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 32px;
+      letter-spacing: 2px;
+      line-height: 1;
+      background: linear-gradient(to right, #fff, #b9cbe3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+    }
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-github {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .btn-github:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #040914;
+      font-weight: bold;
+      border: none;
+      box-shadow: var(--glow-cyan);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 40px rgba(0, 242, 254, 0.4);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      position: relative;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(0, 242, 254, 0.08);
+      border: 1px solid rgba(0, 242, 254, 0.25);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--cyan);
+      margin-bottom: 24px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .hero-pill .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(52px, 8vw, 92px);
+      line-height: 0.95;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, #ffffff 40%, #7e94b4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-title span.accent {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      max-width: 680px;
+      margin: 0 auto 36px;
+      font-size: 18px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+
+    /* Install Box */
+    .install-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 12px 6px 16px;
+      font-family: var(--font-code);
+      font-size: 14px;
+      gap: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+    .install-cmd {
+      color: var(--cyan);
+    }
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: var(--font-code);
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #fff;
+    }
+
+    /* Terminal Simulator */
+    .terminal-wrapper {
+      max-width: 960px;
+      margin: 0 auto 80px;
+      border-radius: var(--radius);
+      background: #090c14;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 242, 254, 0.05);
+      overflow: hidden;
+      text-align: left;
+    }
+    .terminal-header {
+      background: #0e1320;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .terminal-dots {
+      display: flex;
+      gap: 8px;
+    }
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ff5f56; }
+    .dot-yellow { background: #ffbd2e; }
+    .dot-green { background: #27c93f; }
+    .terminal-tabs {
+      display: flex;
+      gap: 6px;
+    }
+    .term-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-code);
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .term-tab.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+    .terminal-body {
+      padding: 24px;
+      font-family: var(--font-code);
+      font-size: 13px;
+      line-height: 1.7;
+      min-height: 340px;
+      max-height: 440px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .term-prompt { color: #54627a; }
+    .term-cmd { color: var(--cyan); font-weight: 600; }
+    .term-pass { color: var(--emerald); font-weight: bold; }
+    .term-fail { color: var(--crimson); font-weight: bold; }
+    .term-warn { color: var(--amber); }
+    .term-dim { color: var(--text-dim); }
+
+    /* Features Grid */
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .section-eyebrow {
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 2px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .section-heading {
+      font-family: var(--font-display);
+      font-size: clamp(38px, 5vw, 56px);
+      letter-spacing: 2px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 80px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      backdrop-filter: blur(8px);
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 242, 254, 0.3);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+    }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      background: rgba(0, 242, 254, 0.1);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: var(--cyan);
+    }
+    .feature-title {
+      font-family: var(--font-display);
+      font-size: 26px;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Interactive Central Example Walkthrough */
+    .walkthrough-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px;
+      margin-bottom: 80px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+    .walkthrough-cols {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: 28px;
+    }
+    @media (max-width: 860px) {
+      .walkthrough-cols { grid-template-columns: 1fr; }
+    }
+    .code-panel {
+      background: #090c14;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .panel-head {
+      background: #0f1422;
+      padding: 10px 16px;
+      font-family: var(--font-code);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+    .panel-pre {
+      padding: 16px;
+      font-family: var(--font-code);
+      font-size: 13px;
+      line-height: 1.6;
+      color: #b0c2de;
+      overflow-x: auto;
+    }
+    .finding-badge-critical {
+      background: var(--crimson);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 12px;
+      letter-spacing: 1px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0;
+      margin-bottom: 80px;
+      background: rgba(13, 17, 26, 0.5);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      text-align: center;
+    }
+    .stat-val {
+      font-family: var(--font-display);
+      font-size: 56px;
+      line-height: 1;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #fff, #99b2d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .stat-lbl {
+      font-family: var(--font-display);
+      font-size: 16px;
+      letter-spacing: 1.5px;
+      color: var(--cyan);
+      text-transform: uppercase;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+    .footer-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="container nav-inner">
+      <a href="#" class="logo">
+        <div class="logo-badge">TG</div>
+        <div class="logo-text">TRACEGUARD</div>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features" class="nav-link">Features</a></li>
+        <li><a href="#demo" class="nav-link">Interactive Demo</a></li>
+        <li><a href="#architecture" class="nav-link">Architecture</a></li>
+        <li>
+          <a href="https://github.com/arnnnnaaavvvvv/TraceGuard" target="_blank" rel="noreferrer" class="nav-btn btn-github">
+            <svg height="18" width="18" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            GitHub
+          </a>
+        </li>
+        <li>
+          <a href="https://www.npmjs.com/package/@arnavvv/traceguard" target="_blank" rel="noreferrer" class="nav-btn btn-primary">
+            npm v0.1.0
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-pill">
+        <span class="dot"></span>
+        v0.1.0 is live on npm registry
+      </div>
+      <h1 class="hero-title">
+        CATCH BREAKING API CHANGES<br>
+        <span class="accent">BEFORE THEY REACH PRODUCTION</span>
+      </h1>
+      <p class="hero-sub">
+        Deterministic OpenAPI contract validation and breaking-change detection. Zero AI hallucinations, zero cloud accounts, 100% offline-first TypeScript CLI and SDK.
+      </p>
+
+      <div class="hero-actions">
+        <div class="install-box">
+          <span style="color: #637592;">$</span>
+          <span class="install-cmd" id="installCmd">npx @arnavvv/traceguard --help</span>
+          <button class="copy-btn" onclick="copyInstall()">Copy</button>
+        </div>
+      </div>
+
+      <!-- Live Terminal Simulator -->
+      <div class="terminal-wrapper" id="demo">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="terminal-dot dot-red"></span>
+            <span class="terminal-dot dot-yellow"></span>
+            <span class="terminal-dot dot-green"></span>
+          </div>
+          <div class="terminal-tabs">
+            <button class="term-tab active" onclick="switchTab('diff')">traceguard diff</button>
+            <button class="term-tab" onclick="switchTab('check')">traceguard check</button>
+            <button class="term-tab" onclick="switchTab('baseline')">traceguard baseline</button>
+          </div>
+          <span style="font-family: var(--font-code); font-size: 11px; color: var(--text-dim);">zsh / bash</span>
+        </div>
+        <div class="terminal-body" id="termOutput"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <section class="stats-bar">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-val">100%</div>
+          <div class="stat-lbl">Deterministic (Zero AI)</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">108 / 108</div>
+          <div class="stat-lbl">Automated Tests Passing</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">0ms</div>
+          <div class="stat-lbl">Cloud Telemetry Overhead</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-val">10 Attack</div>
+          <div class="stat-lbl">Surfaces Hardened</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Central Example Walkthrough -->
+  <section class="container" style="margin-bottom: 80px;">
+    <div class="section-header">
+      <div class="section-eyebrow">The Real-World Problem</div>
+      <h2 class="section-heading">How TraceGuard Catches Breaking Changes</h2>
+    </div>
+
+    <div class="walkthrough-box">
+      <p style="color: var(--text-muted); font-size: 15px;">
+        Consider an API contract declaring <code>GET /api/users/{id}</code> returning <code>{ id: string, name: string, email: string }</code>. When the backend inadvertently returns an integer <code>id: 101</code> and drops <code>email</code>, TraceGuard catches it at the CI gate:
+      </p>
+
+      <div class="walkthrough-cols">
+        <div class="code-panel">
+          <div class="panel-head">
+            <span>fixtures/central-example/spec-v1.yaml</span>
+            <span style="color: var(--cyan);">OpenAPI 3.1</span>
+          </div>
+          <pre class="panel-pre"><code>paths:
+  /api/users/{id}:
+    get:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [id, name, email]
+                properties:
+                  id: { type: string }
+                  name: { type: string }
+                  email: { type: string }</code></pre>
+        </div>
+
+        <div class="code-panel">
+          <div class="panel-head">
+            <span>Observed API Response</span>
+            <span class="finding-badge-critical">CONTRACT DRIFT</span>
+          </div>
+          <pre class="panel-pre"><code style="color: #ff809b;">{
+  "id": 101,          <span style="color: var(--crimson);">// ERROR: expected string</span>
+  "name": "Arnav"     <span style="color: var(--crimson);">// ERROR: email missing</span>
+}</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Features -->
+  <section class="container" id="features">
+    <div class="section-header">
+      <div class="section-eyebrow">Core Capabilities</div>
+      <h2 class="section-heading">Engineered for High-Stakes CI Pipelines</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3 class="feature-title">Runtime Contract Verification</h3>
+        <p class="feature-desc">
+          Validates actual responses from running microservices against OpenAPI 3.0.x and 3.1.x specifications. Validates HTTP status codes, headers, and payload structures.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">Direction-Aware Compatibility Diff</h3>
+        <p class="feature-desc">
+          Differentiates request vs response direction. Correctly flags enum narrowing on responses as breaking, while safely tolerating optional parameter expansion on requests.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📁</div>
+        <h3 class="feature-title">Baseline Snapshot Quarantine</h3>
+        <p class="feature-desc">
+          Record existing legacy contract mismatches into an audited <code>.traceguard-baseline.json</code> snapshot. Only newly introduced breaking changes fail your PR builds.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3 class="feature-title">Adversarially Hardened</h3>
+        <p class="feature-desc">
+          Built under hostile-input assumptions: automatic masking of canary secrets, ReDoS catastrophic regex defenses, prototype-pollution blocks, and manual redirect SSRF prevention.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title">Multi-Format Reporting</h3>
+        <p class="feature-desc">
+          Outputs beautifully styled terminal dashboards, GitHub Flavored Markdown for automated PR sticky comments, clean JSON for telemetry, and standalone HTML reports.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3 class="feature-title">Dual CLI & TypeScript SDK</h3>
+        <p class="feature-desc">
+          Run <code>traceguard</code> directly in terminal and CI runners, or import <code>createTraceGuard()</code> and <code>compareContracts()</code> into Vitest, Jest, or custom test suites.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-inner">
+      <div>
+        <span style="font-family: var(--font-display); font-size: 22px; letter-spacing: 1px; color: #fff;">TRACEGUARD</span>
+        <span style="margin-left: 12px; color: var(--text-dim);">MIT License © 2026 Arnav</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/arnnnnaaavvvvv/TraceGuard" target="_blank" rel="noreferrer" class="footer-link">GitHub Repository</a>
+        <a href="https://www.npmjs.com/package/@arnavvv/traceguard" target="_blank" rel="noreferrer" class="footer-link">npm Package</a>
+        <a href="SECURITY.md" class="footer-link">Security Policy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const termData = {
+      diff: `<span class="term-prompt">$</span> <span class="term-cmd">traceguard diff ./spec-v1.yaml ./spec-v2.yaml</span>
+
+================================================================================
+ TRACEGUARD CONTRACT REPORT - MODE: DIFF
+ Schema Version: 1.0.0 | Engine: v0.1.0
+================================================================================
+
+ <span class="term-fail">FINDINGS (2 total):</span>
+--------------------------------------------------------------------------------
+ #1 [<span class="term-fail">CRITICAL</span>] [BREAKING] TG-COMPAT-RESPONSE-TYPE-CHANGED
+    Target:     GET /api/users/{id}
+    Location:   #/paths/~1api~1users~1{id}/get/responses/200/content/application~1json/schema/properties/id/type
+    Expected:   Type 'string'
+    Actual:     Type 'integer'
+    Message:    Response schema type changed from 'string' to 'integer'.
+--------------------------------------------------------------------------------
+ #2 [<span class="term-fail">CRITICAL</span>] [BREAKING] TG-COMPAT-REQUIRED-RESPONSE-FIELD-REMOVED
+    Target:     GET /api/users/{id}
+    Location:   #/paths/~1api~1users~1{id}/get/responses/200/content/application~1json/schema/required
+    Expected:   Property 'email' required
+    Actual:     Property 'email' removed or optional
+    Message:    Required response property 'email' was removed in 'GET /api/users/{id}'.
+--------------------------------------------------------------------------------
+ <span class="term-fail">STATUS: [FAIL] CI Policy Threshold Violations:</span>
+   * Detected 2 breaking change(s) or critical contract mismatch(es).
+   * Critical findings (2) exceeded threshold of 0.
+================================================================================`,
+      check: `<span class="term-prompt">$</span> <span class="term-cmd">traceguard check --spec ./openapi.yaml --base-url http://localhost:8080</span>
+
+[Target API] Dispatched: GET /api/users/101
+================================================================================
+ TRACEGUARD CONTRACT REPORT - MODE: CHECK
+ Evaluated: 1 / 1 Operations
+================================================================================
+
+ <span class="term-fail">FINDINGS (2 total):</span>
+--------------------------------------------------------------------------------
+ #1 [<span class="term-fail">CRITICAL</span>] [BREAKING] TG-CONTRACT-REQUIRED-MISSING
+    Target:     GET /api/users/{id}
+    Expected:   property 'email' present
+    Actual:     undefined (missing)
+    Message:    Response body schema violation: must have required property 'email'.
+--------------------------------------------------------------------------------
+ #2 [<span class="term-fail">CRITICAL</span>] [BREAKING] TG-CONTRACT-TYPE-MISMATCH
+    Target:     GET /api/users/{id}
+    Expected:   string
+    Actual:     number (101)
+    Message:    Response body schema violation at '#/id': must be string.
+--------------------------------------------------------------------------------
+ <span class="term-fail">STATUS: [FAIL] 2 Critical Violations Found (Exit Code: 1)</span>`,
+      baseline: `<span class="term-prompt">$</span> <span class="term-cmd">traceguard baseline save .traceguard-baseline.json --diff ./spec-v2.yaml</span>
+Baseline snapshot saved with 2 entries.
+
+<span class="term-prompt">$</span> <span class="term-cmd">traceguard diff ./spec-v1.yaml ./spec-v2.yaml --baseline .traceguard-baseline.json</span>
+================================================================================
+ TRACEGUARD CONTRACT REPORT - MODE: DIFF (BASELINE ENABLED)
+================================================================================
+ FINDINGS (2 total):
+   #1 [TG-COMPAT-RESPONSE-TYPE-CHANGED] <span class="term-dim">[SUPPRESSED (BASELINE)]</span>
+   #2 [TG-COMPAT-REQUIRED-RESPONSE-FIELD-REMOVED] <span class="term-dim">[SUPPRESSED (BASELINE)]</span>
+
+ SUMMARY:
+   Total Findings: 2 (2 suppressed by baseline)
+   Breaking Changes Count: 0 active
+
+ <span class="term-pass">STATUS: [PASS] All policy requirements satisfied. (Exit Code: 0)</span>
+================================================================================`
+    };
+
+    function switchTab(mode) {
+      document.querySelectorAll('.term-tab').forEach(b => b.classList.remove('active'));
+      const activeBtn = Array.from(document.querySelectorAll('.term-tab')).find(b => b.textContent.includes(mode));
+      if (activeBtn) activeBtn.classList.add('active');
+      document.getElementById('termOutput').innerHTML = termData[mode];
+    }
+
+    function copyInstall() {
+      const text = document.getElementById('installCmd').textContent;
+      navigator.clipboard.writeText(text);
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    }
+
+    // Default tab
+    switchTab('diff');
+  </script>
+</body>
+</html>

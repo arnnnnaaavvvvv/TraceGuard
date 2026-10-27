@@ -5,4 +5,3 @@ coverage/
 .DS_Store
 *.local
 report.html
-*.html
