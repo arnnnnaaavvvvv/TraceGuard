@@ -11,9 +11,9 @@ describe('CLI Shell', () => {
     expect(commandNames).toContain('baseline');
   });
 
-  it('outputs version string 0.1.0', () => {
+  it('outputs version string 0.1.1', () => {
     const program = buildCliProgram();
-    expect(program.version()).toBe('0.1.0');
+    expect(program.version()).toBe('0.1.1');
   });
 
   it('has zero network side-effects during configuration', () => {
