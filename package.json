@@ -22,6 +22,7 @@
   "files": [
     "dist",
     "index.html",
+    "assets",
     "README.md",
     "LICENSE"
   ],
@@ -40,11 +41,15 @@
   },
   "keywords": [
     "openapi",
+    "openapi-3",
     "api-testing",
     "breaking-changes",
     "contract-testing",
     "spec-diff",
-    "ci"
+    "backward-compatibility",
+    "schema-validation",
+    "ci",
+    "cli"
   ],
   "author": "Arnav",
   "license": "MIT",
@@ -55,7 +60,7 @@
   "bugs": {
     "url": "https://github.com/arnnnnaaavvvvv/TraceGuard/issues"
   },
-  "homepage": "https://github.com/arnnnnaaavvvvv/TraceGuard#readme",
+  "homepage": "https://traceguard-official.vercel.app",
   "dependencies": {
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",

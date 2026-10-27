@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/traceguard-banner.svg" alt="TraceGuard Banner" width="900" />
+  <img src="https://raw.githubusercontent.com/arnnnnaaavvvvv/TraceGuard/main/assets/traceguard-banner.svg" alt="TraceGuard Banner" width="900" />
 </p>
 
 # TraceGuard
@@ -7,11 +7,12 @@
 > **Catch breaking API changes before they reach production.**
 
 [![npm version](https://img.shields.io/npm/v/@arnavvv/traceguard.svg?style=flat-square&color=000000)](https://www.npmjs.com/package/@arnavvv/traceguard)
-[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg?style=flat-square)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg?style=flat-square)](https://github.com/arnnnnaaavvvvv/TraceGuard/blob/main/LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-traceguard--official.vercel.app-black.svg?style=flat-square)](https://traceguard-official.vercel.app)
 [![Node.js CI](https://img.shields.io/badge/Node.js-%3E%3D20.18.0-black.svg?style=flat-square&logo=node.js)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-black.svg?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Tests Passing](https://img.shields.io/badge/Tests-108%2F108%20Passing-black.svg?style=flat-square)](https://github.com/arnnnnaaavvvvv/TraceGuard)
-[![Zero Telemetry](https://img.shields.io/badge/Telemetry-0%25%20Offline-black.svg?style=flat-square)](SECURITY.md)
+[![Zero Telemetry](https://img.shields.io/badge/Telemetry-0%25%20Offline-black.svg?style=flat-square)](https://github.com/arnnnnaaavvvvv/TraceGuard/blob/main/SECURITY.md)
 
 ---
 
@@ -697,11 +698,13 @@ npm pack --dry-run
 ## Author & Community
 
 - **Creator & Maintainer:** [Arnav](https://github.com/arnnnnaaavvvvv)
+- **Live Interactive Playground:** [https://traceguard-official.vercel.app](https://traceguard-official.vercel.app)
 - **Package Distribution:** [`@arnavvv/traceguard` on npm](https://www.npmjs.com/package/@arnavvv/traceguard)
-- **Security Inquiries:** See [SECURITY.md](SECURITY.md) for vulnerability disclosure guidelines.
+- **Source Repository:** [GitHub - arnnnnnaaavvvvv/TraceGuard](https://github.com/arnnnnaaavvvvv/TraceGuard)
+- **Security Inquiries:** See [SECURITY.md](https://github.com/arnnnnaaavvvvv/TraceGuard/blob/main/SECURITY.md) for vulnerability disclosure guidelines.
 
 ---
 
 ## License
 
-TraceGuard is open-source software licensed under the [MIT License](LICENSE).
+TraceGuard is open-source software licensed under the [MIT License](https://github.com/arnnnnaaavvvvv/TraceGuard/blob/main/LICENSE).
