@@ -1,7 +1,10 @@
 {
-  "name": "traceguard",
+  "name": "@arnavvv/traceguard",
   "version": "0.1.0",
   "description": "Catch breaking API changes before they reach production.",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "bin": {
     "traceguard": "dist/cli/index.js"
