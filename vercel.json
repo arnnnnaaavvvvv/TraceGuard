@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/api/mock/users/:path*", "destination": "/api/mock-user" },
+    { "source": "/api/users/:path*", "destination": "/api/mock-user" }
+  ]
+}
