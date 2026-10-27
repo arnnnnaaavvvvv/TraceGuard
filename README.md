@@ -62,10 +62,10 @@ When diffing two versions of the contract where `email` is removed and `id` chan
 
 ```bash
 # As a local project dependency
-npm install --save-dev traceguard
+npm install --save-dev @arnavvv/traceguard
 
 # Or execute directly via npx
-npx traceguard --help
+npx @arnavvv/traceguard --help
 ```
 
 *Requires Node.js `>= 20.18.0` (LTS).*
