@@ -8,10 +8,10 @@ const htmlContent = `<!DOCTYPE html>
   <title>TraceGuard — Catch Breaking API Changes Before Production</title>
   <meta name="description" content="Deterministic, zero-dependency OpenAPI contract testing and breaking change detection for TypeScript & CI pipelines.">
   
-  <!-- Fonts -->
+  <!-- Modern Enterprise Typography: Plus Jakarta Sans + Inter + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -27,8 +27,8 @@ const htmlContent = `<!DOCTYPE html>
       --text-dim: #71717a;
       --text-dark: #000000;
       --radius: 8px;
-      --font-display: 'Bebas Neue', sans-serif;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-code: 'JetBrains Mono', monospace;
     }
 
@@ -40,6 +40,7 @@ const htmlContent = `<!DOCTYPE html>
       font-family: var(--font-body);
       line-height: 1.6;
       overflow-x: hidden;
+      letter-spacing: -0.011em;
       background-image: 
         radial-gradient(ellipse 70% 45% at 50% 0%, rgba(255, 255, 255, 0.08), transparent 70%),
         linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
@@ -80,20 +81,22 @@ const htmlContent = `<!DOCTYPE html>
       width: 28px;
       height: 28px;
       background: #ffffff;
-      border-radius: 4px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: 17px;
+      font-size: 13px;
       color: #000000;
-      font-weight: 900;
+      font-weight: 800;
+      letter-spacing: -0.5px;
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
     }
     .logo-text {
       font-family: var(--font-display);
-      font-size: 28px;
-      letter-spacing: 2px;
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
       line-height: 1;
       color: #ffffff;
     }
@@ -108,6 +111,7 @@ const htmlContent = `<!DOCTYPE html>
       text-decoration: none;
       font-size: 14px;
       font-weight: 500;
+      letter-spacing: -0.01em;
       transition: color 0.2s;
     }
     .nav-link:hover { color: var(--text); }
@@ -118,7 +122,7 @@ const htmlContent = `<!DOCTYPE html>
       padding: 7px 16px;
       border-radius: 6px;
       font-family: var(--font-code);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       text-decoration: none;
       transition: all 0.2s;
@@ -146,7 +150,7 @@ const htmlContent = `<!DOCTYPE html>
 
     /* Hero Section */
     .hero {
-      padding: 90px 0 60px;
+      padding: 96px 0 64px;
       text-align: center;
       position: relative;
     }
@@ -161,8 +165,8 @@ const htmlContent = `<!DOCTYPE html>
       font-size: 11px;
       font-weight: 600;
       color: #d4d4d8;
-      margin-bottom: 24px;
-      letter-spacing: 1px;
+      margin-bottom: 28px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       font-family: var(--font-code);
     }
@@ -180,26 +184,27 @@ const htmlContent = `<!DOCTYPE html>
     }
     .hero-title {
       font-family: var(--font-display);
-      font-size: clamp(52px, 8vw, 94px);
-      line-height: 0.95;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      font-size: clamp(40px, 5.8vw, 74px);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+      font-weight: 800;
       margin-bottom: 24px;
       color: #ffffff;
     }
     .hero-title span.accent {
       color: #a1a1aa;
-      background: linear-gradient(180deg, #ffffff 10%, #71717a 100%);
+      background: linear-gradient(180deg, #ffffff 30%, #71717a 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .hero-sub {
-      max-width: 680px;
+      max-width: 660px;
       margin: 0 auto 36px;
-      font-size: 17px;
+      font-size: 18px;
       color: var(--text-muted);
       font-weight: 400;
       line-height: 1.65;
+      letter-spacing: -0.015em;
     }
     .hero-actions {
       display: flex;
@@ -207,7 +212,7 @@ const htmlContent = `<!DOCTYPE html>
       align-items: center;
       gap: 16px;
       flex-wrap: wrap;
-      margin-bottom: 48px;
+      margin-bottom: 52px;
     }
 
     /* Install Box */
@@ -368,18 +373,20 @@ const htmlContent = `<!DOCTYPE html>
     }
     .stat-val {
       font-family: var(--font-display);
-      font-size: clamp(38px, 4vw, 54px);
-      letter-spacing: 2px;
+      font-size: clamp(34px, 3.6vw, 48px);
+      letter-spacing: -0.03em;
+      font-weight: 800;
       color: #ffffff;
       line-height: 1;
       margin-bottom: 8px;
     }
     .stat-lbl {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.08em;
       font-family: var(--font-code);
+      font-weight: 500;
     }
 
     /* Section Typography */
@@ -390,17 +397,18 @@ const htmlContent = `<!DOCTYPE html>
     .section-eyebrow {
       font-family: var(--font-code);
       font-size: 11px;
-      letter-spacing: 2px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
       color: #71717a;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
     .section-heading {
       font-family: var(--font-display);
-      font-size: clamp(38px, 5vw, 56px);
-      letter-spacing: 2px;
-      line-height: 1;
-      text-transform: uppercase;
+      font-size: clamp(30px, 3.8vw, 44px);
+      letter-spacing: -0.025em;
+      font-weight: 700;
+      line-height: 1.2;
       color: #ffffff;
     }
 
@@ -426,13 +434,14 @@ const htmlContent = `<!DOCTYPE html>
       border: none;
       color: var(--text-muted);
       font-family: var(--font-display);
-      font-size: 19px;
-      letter-spacing: 1px;
-      padding: 16px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      padding: 14px 20px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
       border-bottom: 2px solid transparent;
       white-space: nowrap;
       transition: all 0.2s;
@@ -492,7 +501,7 @@ const htmlContent = `<!DOCTYPE html>
       padding: 20px 24px;
       position: relative;
       font-family: var(--font-code);
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.7;
       margin-bottom: 24px;
       overflow-x: auto;
@@ -532,8 +541,9 @@ const htmlContent = `<!DOCTYPE html>
     }
     .detail-title {
       font-family: var(--font-display);
-      font-size: 18px;
-      letter-spacing: 1px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.015em;
       color: var(--text);
       margin-bottom: 6px;
       display: flex;
@@ -636,9 +646,10 @@ const htmlContent = `<!DOCTYPE html>
     }
     .feature-title {
       font-family: var(--font-display);
-      font-size: 26px;
-      letter-spacing: 1px;
-      margin-bottom: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
       color: var(--text);
     }
     .feature-desc {
@@ -695,14 +706,15 @@ const htmlContent = `<!DOCTYPE html>
     .arch-step-num {
       font-family: var(--font-code);
       font-size: 11px;
+      font-weight: 600;
       color: #a1a1aa;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.06em;
     }
     .arch-step-title {
       font-family: var(--font-display);
-      font-size: 18px;
-      letter-spacing: 0.5px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
       color: #fff;
     }
     .arch-step-detail {
@@ -727,8 +739,9 @@ const htmlContent = `<!DOCTYPE html>
     }
     .arch-detail-title {
       font-family: var(--font-display);
-      font-size: 24px;
-      letter-spacing: 1px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.025em;
       color: var(--text);
     }
     .arch-file-badge {
@@ -781,8 +794,9 @@ const htmlContent = `<!DOCTYPE html>
     }
     .arch-mod-title {
       font-family: var(--font-display);
-      font-size: 22px;
-      letter-spacing: 1px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
       color: var(--text);
     }
     .arch-mod-badge {
@@ -843,7 +857,7 @@ const htmlContent = `<!DOCTYPE html>
     <div class="container nav-inner">
       <a href="#" class="logo">
         <div class="logo-badge">TG</div>
-        <div class="logo-text">TRACEGUARD</div>
+        <div class="logo-text">TraceGuard</div>
       </a>
       <ul class="nav-links">
         <li><a href="#install" class="nav-link">Installation</a></li>
@@ -872,11 +886,11 @@ const htmlContent = `<!DOCTYPE html>
     <div class="container">
       <div class="hero-pill">
         <span class="dot"></span>
-        NPM REGISTRY V0.1.0 AVAILABLE
+        npm registry v0.1.0 available
       </div>
       <h1 class="hero-title">
-        CATCH BREAKING API CHANGES<br>
-        <span class="accent">BEFORE THEY REACH PRODUCTION</span>
+        Catch breaking API changes<br>
+        <span class="accent">before they reach production.</span>
       </h1>
       <p class="hero-sub">
         Deterministic OpenAPI contract validation and breaking-change detection. Zero AI hallucinations, zero cloud accounts, 100% offline-first TypeScript CLI and SDK.
@@ -1156,7 +1170,7 @@ const htmlContent = `<!DOCTYPE html>
     <!-- Pipeline Flow Visual Explorer -->
     <div class="arch-pipeline-container">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
-        <span style="font-family: var(--font-code); font-size: 11px; color: #ffffff; letter-spacing: 1px; text-transform: uppercase;">
+        <span style="font-family: var(--font-code); font-size: 11px; color: #ffffff; letter-spacing: 0.08em; text-transform: uppercase;">
           Interactive Pipeline Flow (Click any stage to inspect internals)
         </span>
         <span style="font-family: var(--font-code); font-size: 11px; color: var(--text-dim);">
@@ -1312,7 +1326,7 @@ const htmlContent = `<!DOCTYPE html>
   <footer>
     <div class="container footer-inner">
       <div>
-        <span style="font-family: var(--font-display); font-size: 22px; letter-spacing: 1px; color: #fff;">TRACEGUARD</span>
+        <span style="font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: -0.02em; color: #fff;">TraceGuard</span>
         <span style="margin-left: 12px; color: var(--text-dim);">MIT License © 2026 Arnav</span>
       </div>
       <div class="footer-links">
@@ -1728,4 +1742,4 @@ export function redactSecrets(text: string): string {
 
 fs.writeFileSync('index.html', htmlContent, 'utf-8');
 fs.writeFileSync('docs/index.html', htmlContent, 'utf-8');
-console.log('Successfully wrote index.html and docs/index.html with Black & White professional theme!');
+console.log('Successfully updated index.html and docs/index.html with Plus Jakarta Sans & Inter professional enterprise typography!');
