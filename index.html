@@ -295,6 +295,29 @@
       background: rgba(255, 255, 255, 0.08);
       color: var(--text);
     }
+    .run-live-btn {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #040914;
+      font-family: var(--font-code);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+    .run-live-btn:hover {
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+      transform: translateY(-1px);
+    }
+    .run-live-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
     .terminal-body {
       padding: 24px;
       font-family: var(--font-code);
@@ -557,7 +580,7 @@
             <button class="term-tab" onclick="switchTab('check')">traceguard check</button>
             <button class="term-tab" onclick="switchTab('baseline')">traceguard baseline</button>
           </div>
-          <span style="font-family: var(--font-code); font-size: 11px; color: var(--text-dim);">zsh / bash</span>
+          <button class="run-live-btn" onclick="executeLiveDemo()" id="runLiveBtn">⚡ Trigger Live Test</button>
         </div>
         <div class="terminal-body" id="termOutput"></div>
       </div>
@@ -780,11 +803,44 @@ Baseline snapshot saved with 2 entries.
 ================================================================================`
     };
 
+    let currentMode = 'diff';
+
     function switchTab(mode) {
+      currentMode = mode;
       document.querySelectorAll('.term-tab').forEach(b => b.classList.remove('active'));
       const activeBtn = Array.from(document.querySelectorAll('.term-tab')).find(b => b.textContent.includes(mode));
       if (activeBtn) activeBtn.classList.add('active');
       document.getElementById('termOutput').innerHTML = termData[mode];
+    }
+
+    async function executeLiveDemo() {
+      const btn = document.getElementById('runLiveBtn');
+      const out = document.getElementById('termOutput');
+      btn.textContent = '⏳ Scanning...';
+      btn.disabled = true;
+
+      const endpoint = currentMode === 'check' ? '/api/run-check' : '/api/run-diff';
+
+      try {
+        const res = await fetch(endpoint);
+        if (res.ok) {
+          const data = await res.json();
+          out.innerHTML = `<span class="term-prompt">$</span> <span class="term-cmd">Live Engine Scan Completed (${new Date().toLocaleTimeString()})</span>\n\n` + 
+            data.terminal
+              .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+              .replace(/\[PASS\]/g, '<span class="term-pass">[PASS]</span>')
+              .replace(/\[FAIL\]/g, '<span class="term-fail">[FAIL]</span>')
+              .replace(/\[CRITICAL\]/g, '<span class="term-fail">[CRITICAL]</span>')
+              .replace(/\[BREAKING\]/g, '<span class="term-warn">[BREAKING]</span>');
+        } else {
+          switchTab(currentMode);
+        }
+      } catch {
+        switchTab(currentMode);
+      } finally {
+        btn.textContent = '⚡ Trigger Live Test';
+        btn.disabled = false;
+      }
     }
 
     function copyInstall() {
