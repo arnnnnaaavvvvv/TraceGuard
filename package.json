@@ -25,6 +25,8 @@
     "node": ">=20.18.0"
   },
   "scripts": {
+    "start": "node ./dist/cli/index.js --help",
+    "demo": "node ./dist/cli/index.js diff fixtures/central-example/spec-v1.yaml fixtures/central-example/spec-v2.yaml",
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src tests",
