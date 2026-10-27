@@ -195,6 +195,7 @@ const htmlContent = `<!DOCTYPE html>
       color: #a1a1aa;
       background: linear-gradient(180deg, #ffffff 30%, #71717a 100%);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .hero-sub {
