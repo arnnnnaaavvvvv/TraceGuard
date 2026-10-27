@@ -4,7 +4,7 @@
   "description": "Catch breaking API changes before they reach production.",
   "type": "module",
   "bin": {
-    "traceguard": "./dist/cli/index.js"
+    "traceguard": "dist/cli/index.js"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -44,6 +44,14 @@
   ],
   "author": "Arnav",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arnnnnaaavvvvv/TraceGuard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/arnnnnaaavvvvv/TraceGuard/issues"
+  },
+  "homepage": "https://github.com/arnnnnaaavvvvv/TraceGuard#readme",
   "dependencies": {
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
