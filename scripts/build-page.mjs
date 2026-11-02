@@ -154,34 +154,6 @@ const htmlContent = `<!DOCTYPE html>
       text-align: center;
       position: relative;
     }
-    .hero-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 5px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      font-size: 11px;
-      font-weight: 600;
-      color: #d4d4d8;
-      margin-bottom: 28px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-family: var(--font-code);
-    }
-    .hero-pill .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #ffffff;
-      box-shadow: 0 0 8px #ffffff;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.85); }
-    }
     .hero-title {
       font-family: var(--font-display);
       font-size: clamp(40px, 5.8vw, 74px);
@@ -885,10 +857,6 @@ const htmlContent = `<!DOCTYPE html>
   <!-- Hero -->
   <section class="hero">
     <div class="container">
-      <div class="hero-pill">
-        <span class="dot"></span>
-        npm registry v0.1.0 available
-      </div>
       <h1 class="hero-title">
         Catch breaking API changes<br>
         <span class="accent">before they reach production.</span>
