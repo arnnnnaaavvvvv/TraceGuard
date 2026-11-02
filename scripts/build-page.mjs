@@ -1010,7 +1010,6 @@ const htmlContent = `<!DOCTYPE html>
   <!-- Central Example Walkthrough -->
   <section class="container" style="margin-bottom: 80px;">
     <div class="section-header">
-      <div class="section-eyebrow">Real-World Protection</div>
       <h2 class="section-heading">How TraceGuard Catches Breaking Changes</h2>
     </div>
 
