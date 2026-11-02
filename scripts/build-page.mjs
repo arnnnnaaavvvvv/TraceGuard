@@ -923,7 +923,6 @@ const htmlContent = `<!DOCTYPE html>
   <!-- Installation & Setup Guide Section -->
   <section class="container install-section" id="install">
     <div class="section-header">
-      <div class="section-eyebrow">Deployment Matrix</div>
       <h2 class="section-heading">Installation &amp; Setup Guide</h2>
       <p style="color: var(--text-muted); max-width: 650px; margin: 12px auto 0; font-size: 15px;">
         Deploy TraceGuard globally across developer machines, inside project repositories, or as an automated pull-request gate in your CI/CD pipelines.
