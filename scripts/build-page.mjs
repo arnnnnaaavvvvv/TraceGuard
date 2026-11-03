@@ -1126,7 +1126,6 @@ const htmlContent = `<!DOCTYPE html>
   <!-- Architecture Section -->
   <section class="container arch-section" id="architecture">
     <div class="section-header">
-      <div class="section-eyebrow">Zero-Trust Pipeline</div>
       <h2 class="section-heading">System Architecture</h2>
       <p style="color: var(--text-muted); max-width: 720px; margin: 12px auto 0; font-size: 15px;">
         TraceGuard is engineered around deterministic, immutable data streams. Every phase executes with bounded memory, hardened regex timeouts, and zero external network leaks.
