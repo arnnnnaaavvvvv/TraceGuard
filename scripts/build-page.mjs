@@ -1057,7 +1057,6 @@ const htmlContent = `<!DOCTYPE html>
   <!-- Key Features -->
   <section class="container" id="features">
     <div class="section-header">
-      <div class="section-eyebrow">Core Capabilities</div>
       <h2 class="section-heading">Engineered for High-Stakes CI Pipelines</h2>
     </div>
 
